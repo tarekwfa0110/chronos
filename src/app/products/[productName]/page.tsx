@@ -1,27 +1,47 @@
+"use client";
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../../lib/supabaseClient';
-import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { useParams, notFound } from 'next/navigation';
+import { useMemo, useRef } from 'react';
+import { useCart } from '../../cart-context';
 
 function slugify(name: string) {
   return name.toLowerCase().replace(/\s+/g, '-');
 }
 
-type Props = {
-  params: { productName: string }
-};
-
-export default async function ProductPage({ params }: Props) {
-  const { productName } = params;
-
-  const { data: product, error } = await supabase
+async function fetchProductByName(productName: string) {
+  const { data, error } = await supabase
     .from('products')
     .select('*')
     .ilike('name', productName.replace(/-/g, ' '))
     .single();
+  if (error || !data) return null;
+  return data;
+}
 
-  if (!product || error) {
+export default function ProductPage() {
+  const params = useParams();
+  const productName = useMemo(() => {
+    if (!params || typeof params.productName !== 'string') return '';
+    return params.productName;
+  }, [params]);
+
+  const { data: product, isLoading } = useQuery({
+    queryKey: ['product', productName],
+    queryFn: () => fetchProductByName(productName),
+    enabled: !!productName,
+  });
+
+  const { addToCart } = useCart();
+  const qtyRef = useRef<HTMLInputElement>(null);
+
+  if (isLoading) {
+    return <main className="max-w-5xl mx-auto py-12 px-4">Loading...</main>;
+  }
+  if (!product) {
     notFound();
   }
 
@@ -60,9 +80,10 @@ export default async function ProductPage({ params }: Props) {
         <h1 className="text-3xl font-extrabold uppercase tracking-tight mb-2">{product.name}</h1>
         <span className="text-2xl font-bold mb-2">EGP {product.price}</span>
         <p className="mb-4 text-base text-muted-foreground">{product.description}</p>
-        {/* Quantity selector (static for now) */}
+        {/* Quantity selector */}
         <div className="flex items-center gap-2 mb-4">
           <input
+            ref={qtyRef}
             type="number"
             min={1}
             defaultValue={1}
@@ -70,7 +91,21 @@ export default async function ProductPage({ params }: Props) {
             aria-label="Quantity"
           />
         </div>
-        <Button size="lg" className="w-full text-lg font-semibold py-6 rounded-xl mb-4">Add to Cart</Button>
+        <Button
+          size="lg"
+          className="w-full text-lg font-semibold py-6 rounded-xl mb-4"
+          onClick={() => {
+            const quantity = qtyRef.current ? Number(qtyRef.current.value) : 1;
+            addToCart({
+              id: product.id,
+              name: product.name,
+              price: product.price,
+              image_url: product.image_url,
+            }, quantity);
+          }}
+        >
+          Add to Cart
+        </Button>
         <Accordion type="single" collapsible className="w-full mt-4">
           <AccordionItem value="details">
             <AccordionTrigger className="text-base font-bold uppercase">More Details</AccordionTrigger>
