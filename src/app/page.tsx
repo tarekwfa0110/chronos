@@ -35,7 +35,7 @@ export default function HomePage() {
           >
             <div className="flex flex-col items-center w-full">
               <div className="w-full aspect-square relative rounded-xl overflow-hidden mb-4 bg-white dark:bg-black">
-                <Image
+            <Image
                   src={product.image_url || '/placeholder.png'}
                   alt={product.name}
                   fill
@@ -43,7 +43,7 @@ export default function HomePage() {
                   className="rounded-xl"
                   sizes="(max-width: 768px) 100vw, 33vw"
                   priority={true}
-                />
+            />
               </div>
               <div className="w-full flex flex-col items-center">
                 <span className="text-lg font-extrabold text-center mb-1 uppercase tracking-wide text-black dark:text-white">
@@ -54,7 +54,7 @@ export default function HomePage() {
             </div>
           </Link>
         ))}
-      </div>
-    </main>
+        </div>
+      </main>
   );
 } 

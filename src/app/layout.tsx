@@ -28,7 +28,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased pt-16 dark:bg-[#0C0A09]`}>
         <Providers>
           <ClientOnlyHeaderAndCartModal />
-          {children}
+        {children}
         </Providers>
       </body>
     </html>

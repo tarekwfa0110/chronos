@@ -31,10 +31,10 @@ function slugify(name: string) {
 
 async function fetchProductByName(productName: string) {
   const { data, error } = await supabase
-    .from('products')
-    .select('*')
+        .from('products')
+        .select('*')
     .ilike('name', productName.replace(/-/g, ' '))
-    .single();
+        .single();
   if (error || !data) return null;
   return data;
 }
@@ -92,10 +92,10 @@ export default function ProductPage() {
   }
 
   if (!product) {
-    notFound();
-  }
+        notFound();
+    }
 
-  return (
+    return (
     <main className="max-w-7xl mx-auto py-8 px-4 dark:bg-[#0C0A09] min-h-screen">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
         {/* Left: Image Gallery */}
@@ -252,6 +252,6 @@ export default function ProductPage() {
           </Accordion>
         </div>
       </div>
-    </main>
-  );
+        </main>
+    );
 }
