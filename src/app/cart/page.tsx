@@ -50,7 +50,7 @@ export default function CartPage() {
                     {cart.length > 0 && (
                         <button
                             onClick={clearCart}
-                            className="text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 font-medium transition-colors"
+                            className="text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 font-medium transition-colors rounded-lg px-4 py-2 ml-2 shadow-sm border border-gray-200 dark:border-gray-700"
                         >
                             Clear Cart
                         </button>
@@ -166,9 +166,11 @@ export default function CartPage() {
                             </div>
                         </div>
 
-                        <Button className="w-full py-4 text-lg font-bold rounded-xl bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity shadow-lg">
-                            Proceed to Checkout
-                        </Button>
+                        <Link href="/checkout" className="block w-full">
+                            <Button className="w-full py-4 text-lg font-bold rounded-xl bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity shadow-lg">
+                                Proceed to Checkout
+                            </Button>
+                        </Link>
 
                         <div className="mt-4 text-center">
                             <p className="text-xs text-gray-500 dark:text-gray-400">

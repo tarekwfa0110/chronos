@@ -68,10 +68,10 @@ export default function CartModal() {
                 <span>EGP {total}</span>
               </div>
               <div className="flex gap-3 mb-8">
-                <Link href="/cart" className="flex-1">
+                <Link href="/cart" className="flex-1" onClick={closeCart}>
                   <Button variant="outline" className="w-full py-6 text-base font-semibold">View Cart</Button>
                 </Link>
-                <Link href="/checkout" className="flex-1">
+                <Link href="/checkout" className="flex-1" onClick={closeCart}>
                   <Button className="w-full py-6 text-base font-semibold">Checkout</Button>
                 </Link>
               </div>

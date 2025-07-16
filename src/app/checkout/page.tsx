@@ -23,17 +23,6 @@ export default function CheckoutPage() {
 
     return (
         <main className="max-w-7xl mx-auto py-8 px-4 sm:px-8 min-h-screen">
-            {/* Header */}
-            <div className="text-center mb-12">
-                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
-                    CHRONOS
-                </h1>
-                <div className="flex items-center justify-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                    <Shield className="w-4 h-4" />
-                    <span>Secure Checkout</span>
-                </div>
-            </div>
-
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
                 {/* Checkout Form */}
                 <section className="lg:col-span-3 space-y-8">
@@ -295,7 +284,7 @@ export default function CheckoutPage() {
 
                 {/* Order Summary */}
                 <aside className="lg:col-span-2">
-                    <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800 shadow-sm sticky top-28">
+                    <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800 shadow-sm sticky top-16 max-h-[calc(100vh-4rem)] overflow-auto">
                         <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">Order Summary</h2>
 
                         {/* Cart Items */}
@@ -381,14 +370,6 @@ export default function CheckoutPage() {
                                     <span className="text-lg font-bold text-gray-900 dark:text-white">Total</span>
                                     <span className="text-2xl font-bold text-gray-900 dark:text-white">${total.toFixed(2)}</span>
                                 </div>
-                            </div>
-                        </div>
-
-                        {/* Security Badge */}
-                        <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                            <div className="flex items-center justify-center gap-2 text-xs text-gray-600 dark:text-gray-400">
-                                <Lock className="w-4 h-4" />
-                                <span>SSL secured checkout</span>
                             </div>
                         </div>
                     </div>
