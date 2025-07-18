@@ -28,7 +28,7 @@ export default function CartModal() {
 
   return (
     <Drawer open={isCartOpen} onOpenChange={closeCart} direction="right">
-      <DrawerContent className="fixed top-0 right-0 h-full max-w-md w-full rounded-none p-0 flex flex-col shadow-2xl border-l bg-white dark:bg-gray-900 z-50 animate-in slide-in-from-right-32" style={{ maxWidth: 400 }}>
+      <DrawerContent className="fixed top-0 right-0 h-full max-w-md w-full rounded-none p-0 flex flex-col shadow-2xl border-l bg-white dark:bg-black z-50 animate-in slide-in-from-right-32" style={{ maxWidth: 400 }}>
         {/* Header */}
         <DrawerHeader className="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
           <div className="flex items-center justify-between w-full">

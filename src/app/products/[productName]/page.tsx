@@ -186,30 +186,30 @@ export default function ProductPage() {
             <div className="flex gap-4">
               <Button
                 size="lg"
-                className={`flex-1 py-4 text-lg font-semibold rounded-xl transition-all duration-200 ${addedToCart
-                  ? 'bg-green-600 hover:bg-green-700'
-                  : 'bg-blue-600 hover:bg-blue-700'
-                  } shadow-lg hover:shadow-xl`}
-                onClick={handleAddToCart}
+                className={`flex-1 py-4 text-lg font-semibold rounded-xl transition-all duration-200 bg-green-600 hover:bg-green-700 shadow-lg hover:shadow-xl`}
+                onClick={() => {
+                  if (!product) return;
+                  window.location.href = `/checkout?productId=${product.id}&quantity=${quantity}`;
+                }}
               >
-                {addedToCart ? (
-                  <>
-                    <Check className="w-5 h-5 mr-2" />
-                    Added to Cart!
-                  </>
-                ) : (
-                  <>
-                    <ShoppingCart className="w-5 h-5 mr-2" />
-                    Add to Cart
-                  </>
-                )}
+                Buy Now
               </Button>
               <Button
                 variant="outline"
                 size="lg"
                 className="px-6 py-4 border-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl font-semibold transition-all duration-200 text-black dark:text-white"
+                onClick={() => {
+                  if (!product) return;
+                  addToCart({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image_url: product.image_url,
+                  }, quantity);
+                }}
               >
-                Buy Now
+                <ShoppingCart className="w-5 h-5 mr-2" />
+                Add to Cart
               </Button>
             </div>
           </div>
