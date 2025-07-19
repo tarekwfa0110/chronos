@@ -25,6 +25,21 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="Chronos is a minimal, modern e-commerce storefront for watches. Shop the latest styles with a clean, dark-mode-first design and a smooth shopping experience." />
+        <meta name="keywords" content="watches, e-commerce, shop, modern, minimal, chronos" />
+        <meta property="og:title" content="Chronos - Modern Watch Store" />
+        <meta property="og:description" content="Chronos is a minimal, modern e-commerce storefront for watches. Shop the latest styles with a clean, dark-mode-first design and a smooth shopping experience." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://chronos.example.com" />
+        <meta property="og:site_name" content="Chronos" />
+        <meta property="og:image" content="/public/globe.svg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Chronos - Modern Watch Store" />
+        <meta name="twitter:description" content="Chronos is a minimal, modern e-commerce storefront for watches. Shop the latest styles with a clean, dark-mode-first design and a smooth shopping experience." />
+        <meta name="twitter:image" content="/public/globe.svg" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased pt-16 dark:bg-[#0C0A09]`}>
         <Providers>
           <ClientOnlyHeaderAndCartModal />

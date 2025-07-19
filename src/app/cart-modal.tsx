@@ -56,7 +56,7 @@ export default function CartModal() {
                 <div key={item.id} className="flex items-center gap-4 mb-6">
                   <div className="w-20 h-20 flex items-center justify-center flex-shrink-0 bg-white dark:bg-gray-800 rounded">
                     <div className="relative w-16 h-16">
-                      <Image src={item.image_url || '/placeholder.png'} alt={item.name} fill style={{ objectFit: 'contain' }} className="rounded" />
+                      <Image src={item.image_url || '/placeholder.png'} alt={item.name} fill style={{ objectFit: 'contain' }} className="rounded" loading="lazy" />
                     </div>
                   </div>
                   <div className="flex-1 flex flex-col justify-center min-h-[80px] text-black dark:text-white">

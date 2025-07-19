@@ -115,7 +115,7 @@ export default function ProductPage() {
                 style={{ objectFit: 'contain' }}
                 className="rounded-2xl transition-transform duration-300 group-hover:scale-105"
                 sizes="(max-width: 768px) 100vw, 50vw"
-                priority={true}
+                loading="lazy"
               />
               {/* Wishlist and Share buttons */}
               <div className="absolute top-4 right-4 flex flex-col gap-2">
@@ -148,6 +148,7 @@ export default function ProductPage() {
                   height={80}
                   style={{ objectFit: 'contain' }}
                   className="w-full h-full bg-gray-50"
+                  loading="lazy"
                 />
               </div>
             ))}

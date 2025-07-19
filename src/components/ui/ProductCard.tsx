@@ -28,7 +28,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, showAction
             style={{ objectFit: 'cover' }}
             className="transition-transform duration-500 group-hover:scale-110"
             sizes="(max-width: 768px) 100vw, 33vw"
-            priority={true}
+            loading="lazy"
           />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
         </div>
