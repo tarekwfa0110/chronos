@@ -5,6 +5,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import { Search, ShoppingCart, Zap } from 'lucide-react';
+import Spinner from '../components/ui/spinner';
+import ProductCard from '../components/ui/ProductCard';
+import type { Product } from '../types';
+import { CATEGORIES } from '../constants';
 
 function slugify(name: string) {
   return name.toLowerCase().replace(/\s+/g, '-');
@@ -16,7 +20,7 @@ async function fetchProducts() {
 }
 
 export default function HomePage() {
-  const { data: products, isLoading } = useQuery({
+  const { data: products, isLoading, error } = useQuery({
     queryKey: ['products'],
     queryFn: fetchProducts,
   });
@@ -24,14 +28,9 @@ export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('');
   
-  const categories = [
-    { label: 'All Products', value: 'all' },
-    { label: 'Men', value: 'men' },
-    { label: 'Women', value: 'women' },
-    { label: 'Sports', value: 'sports' },
-  ];
+  const categories = CATEGORIES;
 
-  const filteredProducts = products?.filter(product => {
+  const filteredProducts = (products as Product[] | undefined)?.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = category === 'all' || product.category === category;
     return matchesSearch && matchesCategory;
@@ -97,7 +96,16 @@ export default function HomePage() {
       {/* Loading State */}
       {isLoading && (
         <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-red-500"></div>
+          <Spinner size={48} />
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <div className="text-center py-12">
+          <p className="text-xl text-red-600 dark:text-red-400 mb-2">Oops! We couldn't load the products.</p>
+          <p className="text-gray-600 dark:text-gray-400">This might be a temporary issue with our store. Please check your internet connection or try refreshing the page in a moment.</p>
+          <p className="text-xs text-gray-400 mt-4">Error details: {error.message || 'Unknown error.'}</p>
         </div>
       )}
 
@@ -112,49 +120,12 @@ export default function HomePage() {
       {/* Products Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         {filteredProducts.map((product) => (
-          <div 
-            key={product.id} 
-            className="group flex flex-col bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-800 hover:shadow-2xl hover:border-gray-300 dark:hover:border-gray-700 transition-all duration-300 transform hover:-translate-y-2"
-          >
-            <Link href={`/products/${slugify(product.name)}`} className="block w-full">
-              <div className="w-full aspect-square relative overflow-hidden">
-                <Image
-                  src={product.image_url || '/placeholder.png'}
-                  alt={product.name}
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="transition-transform duration-500 group-hover:scale-110"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  priority={true}
-                />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
-              </div>
-            </Link>
-            
-            <div className="flex flex-col flex-1 p-6 items-center justify-between">
-              <span className="text-xl font-extrabold text-center mb-2 uppercase tracking-wide text-black dark:text-white group-hover:text-red-500 dark:group-hover:text-red-400 transition-colors duration-300">
-                {product.name}
-              </span>
-              <span className="text-lg font-bold text-center text-black dark:text-white mb-6">
-                EGP {product.price}
-              </span>
-              
-              <div className="flex gap-3 w-full">
-                <Link href={`/products/${slugify(product.name)}`} className="flex-1">
-                  <button className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center gap-2">
-                    <ShoppingCart className="w-4 h-4" />
-                    Add to Cart
-                  </button>
-                </Link>
-                <Link href={`/checkout?productId=${product.id}`} className="flex-1">
-                  <button className="w-full py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-semibold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center gap-2">
-                    <Zap className="w-4 h-4" />
-                    Buy Now
-                  </button>
-                </Link>
-              </div>
-            </div>
-          </div>
+          <ProductCard
+            key={product.id}
+            product={product}
+            onAddToCart={() => {/* TODO: implement add to cart */}}
+            onBuyNow={() => {/* TODO: implement buy now */}}
+          />
         ))}
       </div>
     </main>

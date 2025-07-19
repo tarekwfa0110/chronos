@@ -107,6 +107,7 @@ export default function CartPage() {
                                                     onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
                                                     className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 rounded-l-lg transition-colors"
                                                     disabled={item.quantity <= 1}
+                                                    aria-label="Decrease quantity"
                                                 >
                                                     <Minus className="w-4 h-4" />
                                                 </button>
@@ -116,6 +117,7 @@ export default function CartPage() {
                                                 <button
                                                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
                                                     className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-r-lg transition-colors"
+                                                    aria-label="Increase quantity"
                                                 >
                                                     <Plus className="w-4 h-4" />
                                                 </button>

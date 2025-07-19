@@ -24,6 +24,7 @@ import {
   RotateCcw,
   Clock
 } from 'lucide-react';
+import Spinner from '../../../components/ui/spinner';
 
 function slugify(name: string) {
   return name.toLowerCase().replace(/\s+/g, '-');
@@ -46,7 +47,7 @@ export default function ProductPage() {
     return params.productName;
   }, [params]);
 
-  const { data: product, isLoading } = useQuery({
+  const { data: product, isLoading, error } = useQuery({
     queryKey: ['product', productName],
     queryFn: () => fetchProductByName(productName),
     enabled: !!productName,
@@ -77,15 +78,19 @@ export default function ProductPage() {
 
   if (isLoading) {
     return (
-      <main className="max-w-7xl mx-auto py-12 px-4 dark:bg-[#0C0A09] min-h-screen">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <div className="aspect-square bg-gray-200 dark:bg-[#0C0A09] rounded-2xl animate-pulse"></div>
-          <div className="space-y-4">
-            <div className="h-8 bg-gray-200 dark:bg-[#0C0A09] rounded animate-pulse"></div>
-            <div className="h-6 bg-gray-200 dark:bg-[#0C0A09] rounded animate-pulse w-1/2"></div>
-            <div className="h-4 bg-gray-200 dark:bg-[#0C0A09] rounded animate-pulse"></div>
-            <div className="h-12 bg-gray-200 dark:bg-[#0C0A09] rounded animate-pulse"></div>
-          </div>
+      <main className="max-w-7xl mx-auto py-12 px-4 dark:bg-[#0C0A09] min-h-screen flex items-center justify-center">
+        <Spinner size={56} />
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="max-w-7xl mx-auto py-12 px-4 dark:bg-[#0C0A09] min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-xl text-red-600 dark:text-red-400 mb-2">Sorry, we couldn't load this product.</p>
+          <p className="text-gray-600 dark:text-gray-400">This could be a temporary issue or the product may no longer be available. Please try again later or return to the product list.</p>
+          <p className="text-xs text-gray-400 mt-4">Error details: {error.message || 'Unknown error.'}</p>
         </div>
       </main>
     );
@@ -120,10 +125,11 @@ export default function ProductPage() {
                     ? 'bg-red-500 text-white shadow-lg'
                     : 'bg-white/80 dark:bg-gray-700 text-gray-700 dark:text-white hover:bg-white dark:hover:bg-gray-600 shadow-md'
                     }`}
+                  aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
                 >
                   <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-current' : ''}`} />
                 </button>
-                <button className="p-3 rounded-full bg-white/80 dark:bg-gray-700 text-gray-700 dark:text-white hover:bg-white dark:hover:bg-gray-600 backdrop-blur-sm shadow-md transition-all duration-200">
+                <button className="p-3 rounded-full bg-white/80 dark:bg-gray-700 text-gray-700 dark:text-white hover:bg-white dark:hover:bg-gray-600 backdrop-blur-sm shadow-md transition-all duration-200" aria-label="Share product">
                   <Share2 className="w-5 h-5" />
                 </button>
               </div>
@@ -169,6 +175,7 @@ export default function ProductPage() {
                   onClick={() => handleQuantityChange(-1)}
                   className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                   disabled={quantity <= 1}
+                  aria-label="Decrease quantity"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
@@ -176,6 +183,7 @@ export default function ProductPage() {
                 <button
                   onClick={() => handleQuantityChange(1)}
                   className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  aria-label="Increase quantity"
                 >
                   <Plus className="w-4 h-4" />
                 </button>

@@ -7,6 +7,9 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../lib/supabaseClient';
 import { X, Check, Plus, Minus, Trash2, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
+import ProductCard from '../components/ui/ProductCard';
+import type { Product } from '../types';
+import { Spinner } from '@/components/ui/spinner';
 
 export default function CartModal() {
   const { cart, isCartOpen, closeCart, updateQuantity, removeFromCart, clearCart, addToCart } = useCart();
@@ -14,7 +17,7 @@ export default function CartModal() {
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   // Fetch all products for 'You May Also Like'
-  const { data: products } = useQuery({
+  const { data: products, isLoading: isProductsLoading } = useQuery<Product[]>({
     queryKey: ['products'],
     queryFn: async () => {
       const { data } = await supabase.from('products').select('*');
@@ -78,30 +81,20 @@ export default function CartModal() {
             </div>
           )}
           {/* You May Also Like */}
-          {suggestions.length > 0 && (
+          {isProductsLoading ? (
+            <div className="flex justify-center items-center py-8">
+              <Spinner size={32} />
+            </div>
+          ) : suggestions.length > 0 && (
             <div className="mt-6">
               <div className="font-extrabold text-lg mb-4 uppercase text-black dark:text-white">You May Also Like</div>
               <div className="flex flex-col gap-6">
-                {suggestions.map((item) => (
-                  <div key={item.id} className="flex items-center gap-4">
-                    <div className="w-20 h-20 flex items-center justify-center flex-shrink-0 bg-white dark:bg-gray-800 rounded">
-                      <div className="relative w-16 h-16">
-                        <Image src={item.image_url || '/placeholder.png'} alt={item.name} fill style={{ objectFit: 'contain' }} className="rounded" />
-                      </div>
-                    </div>
-                    <div className="flex-1 text-black dark:text-white">
-                      <div className="font-bold text-base mb-1 uppercase">{item.name}</div>
-                      <div className="font-semibold mb-1">EGP {item.price}</div>
-                    </div>
-                    <Button size="sm" className="px-4 py-2" onClick={() => addToCart({
-                      id: item.id,
-                      name: item.name,
-                      price: item.price,
-                      image_url: item.image_url,
-                    })}>
-                      Add to Cart
-                    </Button>
-                  </div>
+                {suggestions.map((item: Product) => (
+                  <ProductCard
+                    key={item.id}
+                    product={item}
+                    showActions={false}
+                  />
                 ))}
               </div>
             </div>

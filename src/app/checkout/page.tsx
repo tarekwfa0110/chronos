@@ -16,10 +16,20 @@ export default function CheckoutPage() {
     const [promoOpen, setPromoOpen] = useState(false);
     const [promoCode, setPromoCode] = useState("");
     const [paymentMethod, setPaymentMethod] = useState("card");
+    const [promoError, setPromoError] = useState<string | null>(null);
 
     const shipping = 0; // Free shipping
     const tax = subtotal * 0.1; // 10% tax
     const total = subtotal + donation + shipping + tax;
+
+    const handleApplyPromo = () => {
+        if (!promoCode.trim()) {
+            setPromoError('Please enter a promo code.');
+            return;
+        }
+        // Simulate invalid code for demo
+        setPromoError('Invalid promo code.');
+    };
 
     return (
         <main className="max-w-7xl mx-auto py-8 px-4 sm:px-8 min-h-screen">
@@ -194,26 +204,24 @@ export default function CheckoutPage() {
                                 </label>
                                 <div className="flex flex-wrap gap-3">
                                     {[3, 10, 20].map(val => (
-                                        <button
+                                        <Button
                                             key={val}
+                                            type="button"
+                                            variant={donation === val ? "default" : "outline"}
+                                            className={`px-6 py-3 font-semibold transition-all ${donation === val ? "bg-blue-600 text-white shadow-lg scale-105" : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"}`}
                                             onClick={() => setDonation(val)}
-                                            className={`px-6 py-3 rounded-xl font-semibold transition-all ${donation === val
-                                                    ? "bg-blue-600 text-white shadow-lg transform scale-105"
-                                                    : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
-                                                }`}
                                         >
                                             ${val}
-                                        </button>
+                                        </Button>
                                     ))}
-                                    <button
+                                    <Button
+                                        type="button"
+                                        variant={donation === 0 ? "default" : "outline"}
+                                        className={`px-6 py-3 font-semibold transition-all ${donation === 0 ? "bg-blue-600 text-white shadow-lg scale-105" : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"}`}
                                         onClick={() => setDonation(0)}
-                                        className={`px-6 py-3 rounded-xl font-semibold transition-all ${donation === 0
-                                                ? "bg-blue-600 text-white shadow-lg transform scale-105"
-                                                : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
-                                            }`}
                                     >
                                         No donation
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
                         </div>
@@ -326,17 +334,26 @@ export default function CheckoutPage() {
                             </button>
 
                             {promoOpen && (
-                                <div className="mt-3 flex gap-2">
-                                    <input
-                                        type="text"
-                                        placeholder="Enter code"
-                                        value={promoCode}
-                                        onChange={e => setPromoCode(e.target.value)}
-                                        className="flex-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    />
-                                    <Button className="px-4 py-2 text-sm bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg hover:opacity-90">
-                                        Apply
-                                    </Button>
+                                <div className="mt-3 flex flex-col gap-2">
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="text"
+                                            placeholder="Enter code"
+                                            value={promoCode}
+                                            onChange={e => {
+                                                setPromoCode(e.target.value);
+                                                setPromoError(null);
+                                            }}
+                                            className="flex-1 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            aria-label="Promo code"
+                                        />
+                                        <Button className="px-4 py-2 text-sm bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg hover:opacity-90" onClick={handleApplyPromo} type="button">
+                                            Apply
+                                        </Button>
+                                    </div>
+                                    {promoError && (
+                                        <span className="text-red-600 dark:text-red-400 text-xs mt-1">{promoError}</span>
+                                    )}
                                 </div>
                             )}
                         </div>
