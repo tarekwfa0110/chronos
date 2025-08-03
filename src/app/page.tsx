@@ -9,6 +9,7 @@ import Spinner from '../components/ui/spinner';
 import ProductCard from '../components/ui/ProductCard';
 import type { Product } from '../types';
 import { CATEGORIES } from '../constants';
+import { useCart } from './cart-context';
 
 function slugify(name: string) {
   return name.toLowerCase().replace(/\s+/g, '-');
@@ -24,6 +25,7 @@ export default function HomePage() {
     queryKey: ['products'],
     queryFn: fetchProducts,
   });
+  const { addToCart } = useCart();
   const [category, setCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('');
@@ -48,7 +50,7 @@ export default function HomePage() {
           <button
             key={cat.value}
             onClick={() => setCategory(cat.value)}
-            className={`px-8 py-4 rounded-2xl border-2 text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg
+            className={`px-8 py-4 rounded-2xl border-2 text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg cursor-pointer
               ${category === cat.value
                 ? 'bg-red-500 border-red-500 text-white shadow-lg'
                 : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600'}
@@ -123,8 +125,18 @@ export default function HomePage() {
           <ProductCard
             key={product.id}
             product={product}
-            onAddToCart={() => {/* TODO: implement add to cart */}}
-            onBuyNow={() => {/* TODO: implement buy now */}}
+            onAddToCart={() => {
+              addToCart({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image_url: product.image_url,
+              });
+            }}
+            onBuyNow={() => {
+              // Navigate to checkout with this product
+              window.location.href = `/checkout?productId=${product.id}&quantity=1`;
+            }}
           />
         ))}
       </div>

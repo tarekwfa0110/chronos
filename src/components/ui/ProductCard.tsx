@@ -43,7 +43,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, showAction
         {showActions && (
           <div className="flex gap-3 w-full">
             <button
-              className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer"
               onClick={onAddToCart}
               aria-label="Add to Cart"
               type="button"
@@ -52,7 +52,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, showAction
               Add to Cart
             </button>
             <button
-              className="w-full py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-semibold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-semibold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer"
               onClick={onBuyNow}
               aria-label="Buy Now"
               type="button"
