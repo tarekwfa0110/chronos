@@ -5,20 +5,30 @@ import { CartProvider } from './cart-context';
 import { AuthProvider } from './auth-context';
 import { WishlistProvider } from './wishlist-context';
 import { Toaster } from 'sonner';
+import { ErrorBoundary } from '@/components/ui/error-boundary';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000, // 1 minute
+      retry: 1,
+    },
+  },
+});
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <WishlistProvider>
-          <CartProvider>
-            {children}
-          </CartProvider>
-        </WishlistProvider>
-      </AuthProvider>
-      <Toaster position="top-right" richColors />
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <WishlistProvider>
+            <CartProvider>
+              {children}
+            </CartProvider>
+          </WishlistProvider>
+        </AuthProvider>
+        <Toaster position="top-right" richColors />
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 } 

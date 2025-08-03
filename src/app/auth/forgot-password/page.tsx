@@ -1,30 +1,45 @@
 "use client";
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../../auth-context';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
+import { FormProvider } from 'react-hook-form';
+import { Input } from '@/components/ui/form';
+import { forgotPasswordSchema, type ForgotPasswordFormData } from '@/lib/validation';
+import { toast } from 'sonner';
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [email, setEmail] = useState('');
   
   const { resetPassword } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+  const methods = useForm<ForgotPasswordFormData>({
+    resolver: zodResolver(forgotPasswordSchema),
+    mode: 'onChange',
+  });
 
-    const { error } = await resetPassword(email);
-    
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    } else {
-      setSuccess(true);
+  const { handleSubmit } = methods;
+
+  const onSubmit = async (data: ForgotPasswordFormData) => {
+    setLoading(true);
+    setEmail(data.email);
+
+    try {
+      const result = await resetPassword(data.email);
+      if (result.error) {
+        toast.error(result.error);
+      } else {
+        setSuccess(true);
+        toast.success('Password reset link sent! Please check your email.');
+      }
+    } catch (err) {
+      toast.error('An unexpected error occurred');
+    } finally {
       setLoading(false);
     }
   };
@@ -75,42 +90,28 @@ export default function ForgotPasswordPage() {
 
         {/* Forgot Password Form */}
         <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email Field */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Email Address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  placeholder="Enter your email"
-                />
-              </div>
-            </div>
+          <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              {/* Email Field */}
+              <Input
+                name="email"
+                label="Email Address"
+                type="email"
+                placeholder="Enter your email"
+                autoComplete="email"
+                leftIcon={<Mail className="w-5 h-5" />}
+              />
 
-            {/* Error Message */}
-            {error && (
-              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
-                <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
-              </div>
-            )}
-
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
-            >
-              {loading ? 'Sending Reset Link...' : 'Send Reset Link'}
-            </Button>
-          </form>
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+              >
+                {loading ? 'Sending Reset Link...' : 'Send Reset Link'}
+              </Button>
+            </form>
+          </FormProvider>
 
           {/* Links */}
           <div className="mt-6 text-center">

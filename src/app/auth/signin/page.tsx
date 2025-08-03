@@ -1,48 +1,64 @@
 "use client";
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../../auth-context';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Eye, EyeOff, Mail, Lock, ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { FormProvider } from 'react-hook-form';
+import { Input } from '@/components/ui/form';
+import { signInSchema, type SignInFormData } from '@/lib/validation';
+import { toast } from 'sonner';
 
 export default function SignInPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   
   const { signIn, signInWithGoogle } = useAuth();
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+  const methods = useForm<SignInFormData>({
+    resolver: zodResolver(signInSchema),
+    mode: 'onChange',
+  });
 
-    const { error } = await signIn(email, password);
-    
-    if (error) {
-      setError(error.message);
+  const { handleSubmit } = methods;
+
+  const onSubmit = async (data: SignInFormData) => {
+    setLoading(true);
+
+    try {
+      const result = await signIn(data.email, data.password);
+      if (result.error) {
+        toast.error(result.error);
+      } else {
+        router.push('/');
+        toast.success('Welcome back!');
+      }
+    } catch (err) {
+      toast.error('An unexpected error occurred');
+    } finally {
       setLoading(false);
-    } else {
-      router.push('/');
     }
   };
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
-    setError(null);
 
-    const { error } = await signInWithGoogle();
-    
-    if (error) {
-      setError(error.message);
+    try {
+      const result = await signInWithGoogle();
+      if (result.error) {
+        toast.error(result.error);
+        setGoogleLoading(false);
+      }
+      // Google OAuth will redirect, so we don't need to handle success here
+    } catch (err) {
+      toast.error('An unexpected error occurred');
       setGoogleLoading(false);
     }
-    // Google OAuth will redirect, so we don't need to handle success here
   };
 
   return (
@@ -83,68 +99,47 @@ export default function SignInPage() {
             <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email Field */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Email Address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  placeholder="Enter your email"
-                />
-              </div>
-            </div>
+          <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              {/* Email Field */}
+              <Input
+                name="email"
+                label="Email Address"
+                type="email"
+                placeholder="Enter your email"
+                autoComplete="email"
+                leftIcon={<Mail className="w-5 h-5" />}
+              />
 
-            {/* Password Field */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="w-full pl-10 pr-12 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  placeholder="Enter your password"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-                >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-              </div>
-            </div>
+              {/* Password Field */}
+              <Input
+                name="password"
+                label="Password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Enter your password"
+                autoComplete="current-password"
+                leftIcon={<Lock className="w-5 h-5" />}
+                rightIcon={
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                }
+              />
 
-            {/* Error Message */}
-            {error && (
-              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
-                <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
-              </div>
-            )}
-
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
-            >
-              {loading ? 'Signing In...' : 'Sign In'}
-            </Button>
-          </form>
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+              >
+                {loading ? 'Signing In...' : 'Sign In'}
+              </Button>
+            </form>
+          </FormProvider>
 
           {/* Links */}
           <div className="mt-6 text-center space-y-4">
