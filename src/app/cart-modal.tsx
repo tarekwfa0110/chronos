@@ -1,5 +1,5 @@
 "use client";
-import { Drawer, DrawerContent, DrawerHeader, DrawerClose } from '@/components/ui/drawer';
+import { Drawer, DrawerContent, DrawerHeader, DrawerClose, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { useCart } from './cart-context';
@@ -32,6 +32,7 @@ export default function CartModal() {
   return (
     <Drawer open={isCartOpen} onOpenChange={closeCart} direction="right">
       <DrawerContent className="fixed top-0 right-0 h-full max-w-md w-full rounded-none p-0 flex flex-col shadow-2xl border-l bg-white dark:bg-black z-50 animate-in slide-in-from-right-32" style={{ maxWidth: 400 }}>
+        <DrawerTitle className="sr-only">Shopping Cart</DrawerTitle>
         {/* Header */}
         <DrawerHeader className="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
           <div className="flex items-center justify-between w-full">

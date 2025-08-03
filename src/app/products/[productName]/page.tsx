@@ -7,6 +7,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { useParams, notFound } from 'next/navigation';
 import { useMemo, useRef, useState } from 'react';
 import { useCart } from '../../cart-context';
+import { useWishlist } from '../../wishlist-context';
+import { useAuth } from '../../auth-context';
 import {
   Heart,
   Share2,
@@ -54,8 +56,10 @@ export default function ProductPage() {
   });
 
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const { user } = useAuth();
   const [quantity, setQuantity] = useState(1);
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
 
   const handleQuantityChange = (delta: number) => {
@@ -74,6 +78,26 @@ export default function ProductPage() {
 
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2000);
+  };
+
+  const handleWishlistToggle = async () => {
+    if (!product) return;
+    
+    if (!user) {
+      // Redirect to sign in
+      window.location.href = '/auth/signin';
+      return;
+    }
+
+    setWishlistLoading(true);
+    
+    if (isInWishlist(product.id)) {
+      await removeFromWishlist(product.id);
+    } else {
+      await addToWishlist(product);
+    }
+    
+    setWishlistLoading(false);
   };
 
   if (isLoading) {
@@ -120,14 +144,15 @@ export default function ProductPage() {
               {/* Wishlist and Share buttons */}
               <div className="absolute top-4 right-4 flex flex-col gap-2">
                 <button
-                  onClick={() => setIsWishlisted(!isWishlisted)}
-                  className={`p-3 rounded-full backdrop-blur-sm transition-all duration-200 ${isWishlisted
+                  onClick={handleWishlistToggle}
+                  disabled={wishlistLoading}
+                  className={`p-3 rounded-full backdrop-blur-sm transition-all duration-200 ${isInWishlist(product.id)
                     ? 'bg-red-500 text-white shadow-lg'
                     : 'bg-white/80 dark:bg-gray-700 text-gray-700 dark:text-white hover:bg-white dark:hover:bg-gray-600 shadow-md'
                     }`}
-                  aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+                  aria-label={isInWishlist(product.id) ? 'Remove from wishlist' : 'Add to wishlist'}
                 >
-                  <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-current' : ''}`} />
+                  <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
                 </button>
                 <button className="p-3 rounded-full bg-white/80 dark:bg-gray-700 text-gray-700 dark:text-white hover:bg-white dark:hover:bg-gray-600 backdrop-blur-sm shadow-md transition-all duration-200" aria-label="Share product">
                   <Share2 className="w-5 h-5" />
