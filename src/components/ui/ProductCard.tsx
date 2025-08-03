@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { ShoppingCart, Zap, Heart } from 'lucide-react';
 import { useWishlist } from '@/app/wishlist-context';
 import { useAuth } from '@/app/auth-context';
+import { ProductImage } from '@/components/ui/optimized-image';
 
 export interface ProductCardProps {
   product: {
@@ -53,14 +53,12 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, showAction
     <div className="group flex flex-col bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-800 hover:shadow-2xl hover:border-gray-300 dark:hover:border-gray-700 transition-all duration-300 transform hover:-translate-y-2">
       <Link href={`/products/${product.name.toLowerCase().replace(/\s+/g, '-')}`} className="block w-full">
         <div className="w-full aspect-square relative overflow-hidden">
-          <Image
+          <ProductImage
             src={product.image_url || '/placeholder.png'}
             alt={product.name}
             fill
             style={{ objectFit: 'cover' }}
             className="transition-transform duration-500 group-hover:scale-110"
-            sizes="(max-width: 768px) 100vw, 33vw"
-            loading="lazy"
           />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
           

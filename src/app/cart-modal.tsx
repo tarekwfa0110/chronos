@@ -1,8 +1,8 @@
 "use client";
 import { Drawer, DrawerContent, DrawerHeader, DrawerClose, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
-import Image from 'next/image';
 import { useCart } from './cart-context';
+import { ThumbnailImage } from '@/components/ui/optimized-image';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../lib/supabaseClient';
 import { X, Check, Plus, Minus, Trash2, ShoppingBag } from 'lucide-react';
@@ -58,7 +58,7 @@ export default function CartModal() {
                 <div key={item.id} className="flex items-center gap-4 mb-6">
                   <div className="w-20 h-20 flex items-center justify-center flex-shrink-0 bg-white dark:bg-gray-800 rounded">
                     <div className="relative w-16 h-16">
-                      <Image src={item.image_url || '/placeholder.png'} alt={item.name} fill style={{ objectFit: 'contain' }} className="rounded" loading="lazy" />
+                      <ThumbnailImage src={item.image_url || '/placeholder.png'} alt={item.name} fill style={{ objectFit: 'contain' }} className="rounded" />
                     </div>
                   </div>
                   <div className="flex-1 flex flex-col justify-center min-h-[80px] text-black dark:text-white">

@@ -98,12 +98,12 @@ Chronos is a minimal, modern e-commerce storefront built with Next.js, Supabase,
   - [x] Product detail page skeletons
   - [x] Cart loading states
   - [x] Search results skeletons
-- [ ] **Image Optimization**
-  - [ ] Implement blur placeholders
-  - [ ] Add multiple image sizes (responsive)
-  - [ ] Optimize image lazy loading
-  - [ ] Add WebP/AVIF format support
-  - [ ] Implement image compression
+- [x] **Image Optimization**
+  - [x] Implement blur placeholders
+  - [x] Add multiple image sizes (responsive)
+  - [x] Optimize image lazy loading
+  - [x] Add WebP/AVIF format support
+  - [x] Implement image compression
 
 #### Search & Filtering
 - [ ] **Advanced Search**

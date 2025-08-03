@@ -9,6 +9,7 @@ import { useMemo, useRef, useState } from 'react';
 import { useCart } from '../../cart-context';
 import { useWishlist } from '../../wishlist-context';
 import { useAuth } from '../../auth-context';
+import { ProductImage, ThumbnailImage } from '@/components/ui/optimized-image';
 import {
   Heart,
   Share2,
@@ -133,14 +134,13 @@ export default function ProductPage() {
           {/* Main Product Image */}
           <div className="relative group">
             <div className="aspect-square bg-gray-50 dark:bg-black rounded-2xl flex items-center justify-center relative overflow-hidden shadow-lg">
-              <Image
+              <ProductImage
                 src={product.image_url || '/placeholder.png'}
                 alt={product.name}
                 fill
                 style={{ objectFit: 'contain' }}
                 className="rounded-2xl transition-transform duration-300 group-hover:scale-105"
-                sizes="(max-width: 768px) 100vw, 50vw"
-                loading="lazy"
+                priority
               />
               {/* Wishlist and Share buttons */}
               <div className="absolute top-4 right-4 flex flex-col gap-2">
@@ -167,14 +167,13 @@ export default function ProductPage() {
             {[1, 2, 3, 4].map((_, index) => (
               <div key={index} className={`w-20 h-20 rounded-xl overflow-hidden cursor-pointer transition-all duration-200 ${index === 0 ? 'ring-2 ring-blue-500 ring-offset-2' : 'hover:ring-2 hover:ring-gray-300 hover:ring-offset-2'
                 }`}>
-                <Image
+                <ThumbnailImage
                   src={product.image_url || '/placeholder.png'}
                   alt={`${product.name} view ${index + 1}`}
                   width={80}
                   height={80}
                   style={{ objectFit: 'contain' }}
                   className="w-full h-full bg-gray-50"
-                  loading="lazy"
                 />
               </div>
             ))}

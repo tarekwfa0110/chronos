@@ -1,7 +1,7 @@
 "use client";
 import { useCart } from "../cart-context";
-import Image from "next/image";
 import Link from "next/link";
+import { ThumbnailImage } from "@/components/ui/optimized-image";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus, X, ShoppingBag, ArrowLeft } from "lucide-react";
 import { useState } from "react";
@@ -66,15 +66,15 @@ export default function CartPage() {
                             <div className="flex gap-6">
                                 {/* Product Image */}
                                 <div className="flex-shrink-0">
-                                    <div className="w-24 h-24 relative rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800">
-                                        <Image
-                                            src={item.image_url || "/placeholder.png"}
-                                            alt={item.name}
-                                            fill
-                                            style={{ objectFit: "cover" }}
-                                            className="rounded-xl"
-                                        />
-                                    </div>
+                                                                    <div className="w-24 h-24 relative rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800">
+                                    <ThumbnailImage
+                                        src={item.image_url || "/placeholder.png"}
+                                        alt={item.name}
+                                        fill
+                                        style={{ objectFit: "cover" }}
+                                        className="rounded-xl"
+                                    />
+                                </div>
                                 </div>
 
                                 {/* Product Details */}
