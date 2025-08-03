@@ -10,6 +10,7 @@ import Link from 'next/link';
 import ProductCard from '../components/ui/ProductCard';
 import type { Product } from '../types';
 import { Spinner } from '@/components/ui/spinner';
+import { ProductCardSkeleton } from '@/components/ui/skeleton';
 
 export default function CartModal() {
   const { cart, isCartOpen, closeCart, updateQuantity, removeFromCart, clearCart, addToCart } = useCart();
@@ -83,8 +84,13 @@ export default function CartModal() {
           )}
           {/* You May Also Like */}
           {isProductsLoading ? (
-            <div className="flex justify-center items-center py-8">
-              <Spinner size={32} />
+            <div className="mt-6">
+              <div className="font-extrabold text-lg mb-4 uppercase text-black dark:text-white">You May Also Like</div>
+              <div className="flex flex-col gap-6">
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <ProductCardSkeleton key={index} />
+                ))}
+              </div>
             </div>
           ) : suggestions.length > 0 && (
             <div className="mt-6">

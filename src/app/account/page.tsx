@@ -3,6 +3,7 @@ import { useAuth } from '../auth-context';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowLeft, User, Mail, Settings, Heart, Package } from 'lucide-react';
+import { AccountSkeleton } from '@/components/ui/skeleton';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -19,10 +20,7 @@ export default function AccountPage() {
   if (loading) {
     return (
       <main className="max-w-4xl mx-auto py-16 px-4 sm:px-8 min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
-        </div>
+        <AccountSkeleton />
       </main>
     );
   }

@@ -86,18 +86,18 @@ Chronos is a minimal, modern e-commerce storefront built with Next.js, Supabase,
 ### 🎨 UI/UX Enhancements
 
 #### Typography & Design
-- [ ] **Custom Font Integration**
-  - [ ] Replace default font with premium typography
-  - [ ] Add font loading optimization
-  - [ ] Implement font fallbacks
-  - [ ] Consider fonts: Inter, Poppins, or custom brand font
+- [x] **Custom Font Integration**
+  - [x] Replace default font with premium typography (Geist + Inter)
+  - [x] Add font loading optimization (display: swap, preload)
+  - [x] Implement font fallbacks
+  - [x] Consider fonts: Inter, Poppins, or custom brand font
 
 #### Loading & Performance
-- [ ] **Skeleton Loading States**
-  - [ ] Product card skeletons
-  - [ ] Product detail page skeletons
-  - [ ] Cart loading states
-  - [ ] Search results skeletons
+- [x] **Skeleton Loading States**
+  - [x] Product card skeletons
+  - [x] Product detail page skeletons
+  - [x] Cart loading states
+  - [x] Search results skeletons
 - [ ] **Image Optimization**
   - [ ] Implement blur placeholders
   - [ ] Add multiple image sizes (responsive)

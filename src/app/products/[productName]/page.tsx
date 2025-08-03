@@ -27,6 +27,7 @@ import {
   Clock
 } from 'lucide-react';
 import Spinner from '../../../components/ui/spinner';
+import { ProductDetailSkeleton } from '@/components/ui/skeleton';
 
 function slugify(name: string) {
   return name.toLowerCase().replace(/\s+/g, '-');
@@ -102,8 +103,8 @@ export default function ProductPage() {
 
   if (isLoading) {
     return (
-      <main className="max-w-7xl mx-auto py-12 px-4 dark:bg-[#0C0A09] min-h-screen flex items-center justify-center">
-        <Spinner size={56} />
+      <main className="max-w-7xl mx-auto py-12 px-4 dark:bg-[#0C0A09] min-h-screen">
+        <ProductDetailSkeleton />
       </main>
     );
   }

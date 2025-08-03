@@ -10,6 +10,8 @@ import ProductCard from '../components/ui/ProductCard';
 import type { Product } from '../types';
 import { CATEGORIES } from '../constants';
 import { useCart } from './cart-context';
+import { Typography } from '@/components/ui/font-utils';
+import { ProductGridSkeleton } from '@/components/ui/skeleton';
 
 function slugify(name: string) {
   return name.toLowerCase().replace(/\s+/g, '-');
@@ -40,9 +42,9 @@ export default function HomePage() {
 
   return (
     <main className="max-w-7xl mx-auto py-12 px-4 dark:bg-[#0C0A09] min-h-screen">
-      <h1 className="text-5xl font-extrabold mb-12 tracking-tight text-black dark:text-white text-center">
+      <Typography.h1 className="mb-12 text-center">
         Featured Products
-      </h1>
+      </Typography.h1>
       
       {/* Category Filter Buttons */}
       <div className="mb-10 flex flex-wrap gap-4 justify-center">
@@ -97,8 +99,8 @@ export default function HomePage() {
 
       {/* Loading State */}
       {isLoading && (
-        <div className="flex justify-center items-center py-12">
-          <Spinner size={48} />
+        <div className="space-y-8">
+          <ProductGridSkeleton count={6} />
         </div>
       )}
 
