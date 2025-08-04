@@ -101,7 +101,7 @@ export default function OrderDetailsPage({ params }: { params: { orderId: string
           setShippingAddress(addressData);
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching order details:', error);
     } finally {
       setIsLoading(false);

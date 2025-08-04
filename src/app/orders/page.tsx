@@ -48,7 +48,7 @@ export default function OrdersPage() {
 
       if (error) throw error;
       setOrders(data || []);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching orders:', error);
     } finally {
       setIsLoading(false);

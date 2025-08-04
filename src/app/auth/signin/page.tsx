@@ -150,7 +150,7 @@ export default function SignInPage() {
               Forgot your password?
             </Link>
             <div className="text-sm text-gray-600 dark:text-gray-400">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link
                 href="/auth/signup"
                 className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition-colors"
@@ -163,4 +163,4 @@ export default function SignInPage() {
       </div>
     </main>
   );
-} 
+}

@@ -183,11 +183,11 @@ export const validateField = async (schema: z.ZodSchema, value: any, fieldName: 
   try {
     await schema.parseAsync({ [fieldName]: value });
     return { isValid: true, error: undefined };
-  } catch (error) {
+  } catch (error: any) {
     if (error instanceof z.ZodError) {
       const fieldError = error.errors.find(err => err.path.includes(fieldName));
       return { isValid: false, error: fieldError?.message };
     }
     return { isValid: false, error: 'Validation failed' };
   }
-}; 
+};

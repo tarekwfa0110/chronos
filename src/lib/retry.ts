@@ -43,7 +43,7 @@ export async function retry<T>(
   for (let attempt = 1; attempt <= finalConfig.maxAttempts; attempt++) {
     try {
       return await fn();
-    } catch (error) {
+    } catch (error: any) {
       lastError = error;
       
       // Check if we should retry
@@ -76,7 +76,7 @@ export async function retryWithHandler<T>(
   for (let attempt = 1; attempt <= finalConfig.maxAttempts; attempt++) {
     try {
       return await fn();
-    } catch (error) {
+    } catch (error: any) {
       lastError = error;
       
       if (attempt === finalConfig.maxAttempts || !finalConfig.retryCondition!(error)) {
@@ -176,7 +176,7 @@ export async function retryWithProgress<T>(
     try {
       onProgress?.(attempt, finalConfig.maxAttempts);
       return await fn();
-    } catch (error) {
+    } catch (error: any) {
       lastError = error;
       
       if (attempt === finalConfig.maxAttempts || !finalConfig.retryCondition!(error)) {
@@ -209,4 +209,4 @@ export function isRetryableError(error: any): boolean {
 export function getRetryDelay(attempt: number, config: Partial<RetryConfig> = {}): number {
   const finalConfig = { ...defaultRetryConfig, ...config };
   return calculateDelay(attempt, finalConfig);
-} 
+}

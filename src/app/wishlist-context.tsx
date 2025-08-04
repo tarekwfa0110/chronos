@@ -60,7 +60,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
       
       console.log('Wishlist table test:', { wishlistTest, wishlistError });
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Database connection test failed:', error);
     }
   };
@@ -100,7 +100,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
 
       console.log('Wishlist data:', data);
       setWishlist(data || []);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching wishlist:', error);
       toast.error('Failed to fetch wishlist');
     } finally {
@@ -149,7 +149,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
       await fetchWishlist();
       toast.success(`${product.name} added to wishlist`);
       return { error: null };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error adding to wishlist:', error);
       toast.error('Failed to add item to wishlist');
       return { error: 'Failed to add item to wishlist' };
@@ -188,7 +188,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
       }
       
       return { error: null };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error removing from wishlist:', error);
       toast.error('Failed to remove item from wishlist');
       return { error: 'Failed to remove item from wishlist' };
@@ -217,7 +217,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
 
       setWishlist([]);
       return { error: null };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error clearing wishlist:', error);
       return { error: 'Failed to clear wishlist' };
     }
@@ -241,4 +241,4 @@ export function useWishlist() {
   const ctx = useContext(WishlistContext);
   if (!ctx) throw new Error('useWishlist must be used within a WishlistProvider');
   return ctx;
-} 
+}

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft, MapPin, Plus, Edit, Trash2, Check } from 'lucide-react';
 import { AccountSkeleton } from '@/components/ui/skeleton';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { createClient } from '@/lib/supabaseClient';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -15,6 +15,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { addressSchema, AddressFormData } from '@/lib/validation';
 import { toast } from 'sonner';
+
+// Define a custom error type
+type SupabaseError = {
+  message: string;
+};
 
 type Address = {
   id: string;
@@ -63,7 +68,7 @@ export default function AddressesPage() {
     if (user) {
       fetchAddresses();
     }
-  }, [user]);
+  }, [user, fetchAddresses]);
 
   useEffect(() => {
     if (editingAddress) {
@@ -93,7 +98,7 @@ export default function AddressesPage() {
     }
   }, [editingAddress, setValue, reset]);
 
-  const fetchAddresses = async () => {
+  const fetchAddresses = useCallback(async () => {
     setIsLoading(true);
     try {
       const { data, error } = await supabase
@@ -104,12 +109,12 @@ export default function AddressesPage() {
 
       if (error) throw error;
       setAddresses(data || []);
-    } catch (error) {
+    } catch (error: SupabaseError) {
       console.error('Error fetching addresses:', error);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [supabase]);
 
   const onSubmit = async (data: AddressFormData) => {
     if (!user) return;
@@ -171,7 +176,7 @@ export default function AddressesPage() {
       fetchAddresses();
       setShowAddressModal(false);
       setEditingAddress(null);
-    } catch (error: any) {
+    } catch (error: SupabaseError) {
       toast.error(error.message || 'Failed to save address');
     } finally {
       setIsSubmitting(false);
@@ -190,7 +195,7 @@ export default function AddressesPage() {
       setAddresses(addresses.filter(addr => addr.id !== id));
       setShowDeleteConfirm(null);
       toast.success('Address deleted successfully');
-    } catch (error: any) {
+    } catch (error: SupabaseError) {
       toast.error(error.message || 'Failed to delete address');
     }
   };
@@ -212,7 +217,7 @@ export default function AddressesPage() {
       // Refresh addresses
       fetchAddresses();
       toast.success('Default address updated');
-    } catch (error: any) {
+    } catch (error: SupabaseError) {
       toast.error(error.message || 'Failed to update default address');
     }
   };
