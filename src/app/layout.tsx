@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
-import React from "react";
+import { Header } from "@/components/ui/header";
+import CartModal from "./cart-modal";
 
 // Primary font: Geist (modern, clean)
 const geistSans = Geist({
@@ -107,7 +108,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased pt-16 dark:bg-[#0C0A09]`}>
         <Providers>
           <ClientOnlyHeaderAndCartModal />
-        {children}
+          {children}
         </Providers>
       </body>
     </html>
@@ -117,16 +118,6 @@ export default function RootLayout({
 // Client-only wrapper for Header and CartModal
 function ClientOnlyHeaderAndCartModal() {
   "use client";
-  const [Header, setHeader] = React.useState<React.ComponentType | null>(null);
-  const [CartModal, setCartModal] = React.useState<React.ComponentType | null>(null);
-
-  React.useEffect(() => {
-    import("@/components/ui/header").then((module) => setHeader(() => module.Header));
-    import("./cart-modal").then((module) => setCartModal(() => module.default));
-  }, []);
-
-  if (!Header || !CartModal) return null;
-
   return (
     <>
       <Header />
