@@ -5,10 +5,9 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { ArrowLeft, Package, Truck, MapPin, Calendar, CreditCard, ChevronDown, ChevronUp } from 'lucide-react';
 import { AccountSkeleton } from '@/components/ui/skeleton';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useEffect, useState, useCallback } from 'react';
 import { createClient } from '@/lib/supabaseClient';
-import type { PageProps } from 'next';
 
 type OrderItem = {
   id: string;
@@ -45,7 +44,9 @@ type Address = {
   phone?: string;
 };
 
-export default function OrderDetailsPage({ params }: PageProps<{ orderId: string }>) {
+export default function OrderDetailsPage() {
+  const params = useParams();
+  const orderId = params?.orderId as string;
   const { user, loading } = useAuth();
   const router = useRouter();
   const [order, setOrder] = useState<Order | null>(null);
@@ -103,10 +104,10 @@ export default function OrderDetailsPage({ params }: PageProps<{ orderId: string
   }, [user, loading, router]);
 
   useEffect(() => {
-    if (user && params.orderId) {
-      fetchOrderDetails(params.orderId);
+    if (user && orderId) {
+      fetchOrderDetails(orderId);
     }
-  }, [user, params.orderId, fetchOrderDetails]);
+  }, [user, orderId, fetchOrderDetails]);
 
   const getStatusColor = (status: Order['status']) => {
     switch (status) {

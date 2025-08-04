@@ -37,7 +37,7 @@ export default function SignUpPage() {
     try {
       const result = await signUp(data.email, data.password, data.fullName);
       if (result.error) {
-        toast.error(result.error);
+        toast.error(result.error?.message || 'An error occurred');
       } else {
         setSuccess(true);
         toast.success('Account created successfully! Please check your email to verify your account.');

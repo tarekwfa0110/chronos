@@ -32,18 +32,18 @@ export const fontClasses = {
   "6xl": "text-6xl",
   
   // Line heights
-  tight: "leading-tight",
-  normal: "leading-normal",
-  relaxed: "leading-relaxed",
-  loose: "leading-loose",
+  leadingTight: "leading-tight",
+  leadingNormal: "leading-normal",
+  leadingRelaxed: "leading-relaxed",
+  leadingLoose: "leading-loose",
   
   // Letter spacing
-  tighter: "tracking-tighter",
-  tight: "tracking-tight",
-  normal: "tracking-normal",
-  wide: "tracking-wide",
-  wider: "tracking-wider",
-  widest: "tracking-widest",
+  trackingTighter: "tracking-tighter",
+  trackingTight: "tracking-tight",
+  trackingNormal: "tracking-normal",
+  trackingWide: "tracking-wide",
+  trackingWider: "tracking-wider",
+  trackingWidest: "tracking-widest",
 } as const;
 
 // Typography components for consistent text styling
@@ -55,7 +55,7 @@ export const Typography = {
         fontClasses.sans,
         fontClasses.bold,
         fontClasses["4xl"],
-        fontClasses.tight,
+        fontClasses.leadingTight,
         "text-foreground",
         className
       )} 
@@ -71,7 +71,7 @@ export const Typography = {
         fontClasses.sans,
         fontClasses.bold,
         fontClasses["3xl"],
-        fontClasses.tight,
+        fontClasses.leadingTight,
         "text-foreground",
         className
       )} 
@@ -87,7 +87,7 @@ export const Typography = {
         fontClasses.sans,
         fontClasses.semibold,
         fontClasses["2xl"],
-        fontClasses.tight,
+        fontClasses.leadingTight,
         "text-foreground",
         className
       )} 
@@ -103,7 +103,7 @@ export const Typography = {
         fontClasses.sans,
         fontClasses.semibold,
         fontClasses.xl,
-        fontClasses.tight,
+        fontClasses.leadingTight,
         "text-foreground",
         className
       )} 
@@ -120,7 +120,7 @@ export const Typography = {
         fontClasses.sans,
         fontClasses.normal,
         fontClasses.base,
-        fontClasses.relaxed,
+        fontClasses.leadingRelaxed,
         "text-foreground",
         className
       )} 
@@ -137,7 +137,7 @@ export const Typography = {
         fontClasses.sans,
         fontClasses.normal,
         fontClasses.sm,
-        fontClasses.relaxed,
+        fontClasses.leadingRelaxed,
         "text-muted-foreground",
         className
       )} 
@@ -170,7 +170,7 @@ export const Typography = {
         fontClasses.sans,
         fontClasses.medium,
         fontClasses.sm,
-        fontClasses.tight,
+        fontClasses.leadingTight,
         "text-foreground",
         className
       )} 

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z, ZodError } from 'zod';
 
 // Base validation schemas
 export const emailSchema = z
@@ -184,9 +184,10 @@ export const validateField = async (schema: z.ZodSchema, value: unknown, fieldNa
     await schema.parseAsync({ [fieldName]: value });
     return { isValid: true, error: undefined };
   } catch (error: unknown) {
-    if (error instanceof z.ZodError) {
-      const fieldError = error.errors.find(err => err.path.includes(fieldName));
-      return { isValid: false, error: fieldError?.message };
+    if (error instanceof ZodError) {
+      // Get the first error message for the field
+      const errorMessage = error.message || 'Validation failed';
+      return { isValid: false, error: errorMessage };
     }
     return { isValid: false, error: 'Validation failed' };
   }

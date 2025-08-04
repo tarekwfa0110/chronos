@@ -33,7 +33,7 @@ export default function SignInPage() {
     try {
       const result = await signIn(data.email, data.password);
       if (result.error) {
-        toast.error(result.error);
+        toast.error(result.error?.message || 'An error occurred');
       } else {
         router.push('/');
         toast.success('Welcome back!');
@@ -51,7 +51,7 @@ export default function SignInPage() {
     try {
       const result = await signInWithGoogle();
       if (result.error) {
-        toast.error(result.error);
+        toast.error(result.error?.message || 'An error occurred');
         setGoogleLoading(false);
       }
       // Google OAuth will redirect, so we don't need to handle success here
