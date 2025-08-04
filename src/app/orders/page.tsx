@@ -36,7 +36,7 @@ export default function OrdersPage() {
     if (user) {
       fetchOrders();
     }
-  }, [user]);
+  }, [user, fetchOrders]);
 
   const fetchOrders = async () => {
     setIsLoading(true);
@@ -48,7 +48,7 @@ export default function OrdersPage() {
 
       if (error) throw error;
       setOrders(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching orders:', error);
     } finally {
       setIsLoading(false);

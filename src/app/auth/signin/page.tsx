@@ -38,7 +38,7 @@ export default function SignInPage() {
         router.push('/');
         toast.success('Welcome back!');
       }
-    } catch (err) {
+    } catch (_err) {
       toast.error('An unexpected error occurred');
     } finally {
       setLoading(false);
@@ -55,7 +55,7 @@ export default function SignInPage() {
         setGoogleLoading(false);
       }
       // Google OAuth will redirect, so we don't need to handle success here
-    } catch (err) {
+    } catch (_err) {
       toast.error('An unexpected error occurred');
       setGoogleLoading(false);
     }

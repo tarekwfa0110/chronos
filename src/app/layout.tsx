@@ -116,7 +116,7 @@ export default function RootLayout({
 // Client-only wrapper for Header and CartModal
 function ClientOnlyHeaderAndCartModal() {
   "use client";
-  const { Header } = require("@/components/ui/header");
+  const Header = require("@/components/ui/header").Header;
   const CartModal = require("./cart-modal").default;
   return (
     <>

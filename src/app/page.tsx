@@ -1,21 +1,14 @@
 "use client";
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../lib/supabaseClient';
-import Link from 'next/link';
-import Image from 'next/image';
 import { useState } from 'react';
-import { Search, ShoppingCart, Zap } from 'lucide-react';
-import Spinner from '../components/ui/spinner';
+import { Search } from 'lucide-react';
 import ProductCard from '../components/ui/ProductCard';
 import type { Product } from '../types';
 import { CATEGORIES } from '../constants';
 import { useCart } from './cart-context';
 import { Typography } from '@/components/ui/font-utils';
 import { ProductGridSkeleton } from '@/components/ui/skeleton';
-
-function slugify(name: string) {
-  return name.toLowerCase().replace(/\s+/g, '-');
-}
 
 async function fetchProducts() {
   const { data } = await supabase.from('products').select('*');
@@ -107,7 +100,7 @@ export default function HomePage() {
       {/* Error State */}
       {error && (
         <div className="text-center py-12">
-          <p className="text-xl text-red-600 dark:text-red-400 mb-2">Oops! We couldn't load the products.</p>
+          <p className="text-xl text-red-600 dark:text-red-400 mb-2">Oops! We couldn&apos;t load the products.</p>
           <p className="text-gray-600 dark:text-gray-400">This might be a temporary issue with our store. Please check your internet connection or try refreshing the page in a moment.</p>
           <p className="text-xs text-gray-400 mt-4">Error details: {error.message || 'Unknown error.'}</p>
         </div>

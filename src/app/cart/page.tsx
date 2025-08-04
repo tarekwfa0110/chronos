@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ThumbnailImage } from "@/components/ui/optimized-image";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus, X, ShoppingBag, ArrowLeft } from "lucide-react";
-import { useState } from "react";
+
 
 export default function CartPage() {
     const { cart, updateQuantity, removeFromCart, clearCart } = useCart();

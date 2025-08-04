@@ -5,15 +5,15 @@ import { useCart } from './cart-context';
 import { ThumbnailImage } from '@/components/ui/optimized-image';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../lib/supabaseClient';
-import { X, Check, Plus, Minus, Trash2, ShoppingBag } from 'lucide-react';
+import { X, Check } from 'lucide-react';
 import Link from 'next/link';
 import ProductCard from '../components/ui/ProductCard';
 import type { Product } from '../types';
-import { Spinner } from '@/components/ui/spinner';
+
 import { ProductCardSkeleton } from '@/components/ui/skeleton';
 
 export default function CartModal() {
-  const { cart, isCartOpen, closeCart, updateQuantity, removeFromCart, clearCart, addToCart } = useCart();
+  const { cart, isCartOpen, closeCart } = useCart();
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 

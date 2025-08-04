@@ -1,11 +1,10 @@
 "use client";
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../../lib/supabaseClient';
-import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useParams, notFound } from 'next/navigation';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useCart } from '../../cart-context';
 import { useWishlist } from '../../wishlist-context';
 import { useAuth } from '../../auth-context';

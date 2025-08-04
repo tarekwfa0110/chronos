@@ -8,7 +8,6 @@ import { AccountSkeleton } from '@/components/ui/skeleton';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabaseClient';
-import Image from 'next/image';
 
 type OrderItem = {
   id: string;
@@ -65,7 +64,7 @@ export default function OrderDetailsPage({ params }: { params: { orderId: string
     if (user && params.orderId) {
       fetchOrderDetails(params.orderId);
     }
-  }, [user, params.orderId]);
+  }, [user, params.orderId, fetchOrderDetails]);
 
   const fetchOrderDetails = async (orderId: string) => {
     setIsLoading(true);
@@ -101,7 +100,7 @@ export default function OrderDetailsPage({ params }: { params: { orderId: string
           setShippingAddress(addressData);
         }
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error fetching order details:', error);
     } finally {
       setIsLoading(false);
@@ -162,7 +161,7 @@ export default function OrderDetailsPage({ params }: { params: { orderId: string
             Order Not Found
           </h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
-            The order you're looking for doesn't exist or you don't have permission to view it.
+            The order you&apos;re looking for doesn&apos;t exist or you don&apos;t have permission to view it.
           </p>
           <Button 
             onClick={() => router.push('/orders')}

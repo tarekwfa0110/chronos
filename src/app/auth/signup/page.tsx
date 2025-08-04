@@ -27,7 +27,7 @@ export default function SignUpPage() {
     mode: 'onChange',
   });
 
-  const { handleSubmit, watch, formState: { errors } } = methods;
+  const { handleSubmit, watch } = methods;
   const password = watch('password');
 
   const onSubmit = async (data: SignUpFormData) => {
@@ -42,7 +42,7 @@ export default function SignUpPage() {
         setSuccess(true);
         toast.success('Account created successfully! Please check your email to verify your account.');
       }
-    } catch (err) {
+    } catch (_err) {
       toast.error('An unexpected error occurred');
     } finally {
       setLoading(false);
