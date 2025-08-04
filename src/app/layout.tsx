@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
+import React from "react";
 
 // Primary font: Geist (modern, clean)
 const geistSans = Geist({
@@ -116,8 +117,16 @@ export default function RootLayout({
 // Client-only wrapper for Header and CartModal
 function ClientOnlyHeaderAndCartModal() {
   "use client";
-  const Header = require("@/components/ui/header").Header;
-  const CartModal = require("./cart-modal").default;
+  const [Header, setHeader] = React.useState<React.ComponentType | null>(null);
+  const [CartModal, setCartModal] = React.useState<React.ComponentType | null>(null);
+
+  React.useEffect(() => {
+    import("@/components/ui/header").then((module) => setHeader(() => module.Header));
+    import("./cart-modal").then((module) => setCartModal(() => module.default));
+  }, []);
+
+  if (!Header || !CartModal) return null;
+
   return (
     <>
       <Header />

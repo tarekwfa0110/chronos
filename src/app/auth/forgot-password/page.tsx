@@ -32,12 +32,12 @@ export default function ForgotPasswordPage() {
     try {
       const result = await resetPassword(data.email);
       if (result.error) {
-        toast.error(result.error);
+        toast.error(result.error?.message || 'An error occurred');
       } else {
         setSuccess(true);
         toast.success('Password reset link sent! Please check your email.');
       }
-    } catch (_err) {
+    } catch {
       toast.error('An unexpected error occurred');
     } finally {
       setLoading(false);

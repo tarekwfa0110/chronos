@@ -13,25 +13,14 @@ import {
   Heart,
   Share2,
   ShoppingCart,
-  Star,
   Shield,
   Truck,
   RefreshCw,
   Plus,
   Minus,
-  Check,
-  Info,
-  Package,
-  Ruler,
-  RotateCcw,
   Clock
 } from 'lucide-react';
-import Spinner from '../../../components/ui/spinner';
 import { ProductDetailSkeleton } from '@/components/ui/skeleton';
-
-function slugify(name: string) {
-  return name.toLowerCase().replace(/\s+/g, '-');
-}
 
 async function fetchProductByName(productName: string) {
   const { data, error } = await supabase
@@ -61,24 +50,9 @@ export default function ProductPage() {
   const { user } = useAuth();
   const [quantity, setQuantity] = useState(1);
   const [wishlistLoading, setWishlistLoading] = useState(false);
-  const [addedToCart, setAddedToCart] = useState(false);
 
   const handleQuantityChange = (delta: number) => {
     setQuantity(prev => Math.max(1, prev + delta));
-  };
-
-  const handleAddToCart = () => {
-    if (!product) return;
-
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image_url: product.image_url,
-    }, quantity);
-
-    setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 2000);
   };
 
   const handleWishlistToggle = async () => {
@@ -113,7 +87,7 @@ export default function ProductPage() {
     return (
       <main className="max-w-7xl mx-auto py-12 px-4 dark:bg-[#0C0A09] min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-xl text-red-600 dark:text-red-400 mb-2">Sorry, we couldn't load this product.</p>
+          <p className="text-xl text-red-600 dark:text-red-400 mb-2">Sorry, we couldn&apos;t load this product.</p>
           <p className="text-gray-600 dark:text-gray-400">This could be a temporary issue or the product may no longer be available. Please try again later or return to the product list.</p>
           <p className="text-xs text-gray-400 mt-4">Error details: {error.message || 'Unknown error.'}</p>
         </div>

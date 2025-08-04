@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft, Package, Clock, ChevronRight, Search } from 'lucide-react';
 import { AccountSkeleton } from '@/components/ui/skeleton';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { createClient } from '@/lib/supabaseClient';
 
@@ -26,19 +26,7 @@ export default function OrdersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const supabase = createClient();
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/auth/signin');
-    }
-  }, [user, loading, router]);
-
-  useEffect(() => {
-    if (user) {
-      fetchOrders();
-    }
-  }, [user, fetchOrders]);
-
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     setIsLoading(true);
     try {
       const { data, error } = await supabase
@@ -53,7 +41,19 @@ export default function OrdersPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [supabase]);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/auth/signin');
+    }
+  }, [user, loading, router]);
+
+  useEffect(() => {
+    if (user) {
+      fetchOrders();
+    }
+  }, [user, fetchOrders]);
 
   const filteredOrders = orders.filter(order => 
     order.order_number.toLowerCase().includes(searchQuery.toLowerCase())

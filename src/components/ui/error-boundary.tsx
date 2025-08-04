@@ -237,7 +237,7 @@ export function useErrorHandler() {
 }
 
 // Error reporting utility
-export const logErrorToService = (error: Error, context?: any) => {
+export const logErrorToService = (error: Error, context?: Record<string, unknown>) => {
   // In a real application, you would send this to your error reporting service
   // Example: Sentry, LogRocket, Bugsnag, etc.
   

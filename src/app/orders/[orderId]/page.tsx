@@ -6,8 +6,9 @@ import Link from 'next/link';
 import { ArrowLeft, Package, Truck, MapPin, Calendar, CreditCard, ChevronDown, ChevronUp } from 'lucide-react';
 import { AccountSkeleton } from '@/components/ui/skeleton';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { createClient } from '@/lib/supabaseClient';
+import type { PageProps } from 'next';
 
 type OrderItem = {
   id: string;
@@ -44,7 +45,7 @@ type Address = {
   phone?: string;
 };
 
-export default function OrderDetailsPage({ params }: { params: { orderId: string } }) {
+export default function OrderDetailsPage({ params }: PageProps<{ orderId: string }>) {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [order, setOrder] = useState<Order | null>(null);
@@ -54,19 +55,7 @@ export default function OrderDetailsPage({ params }: { params: { orderId: string
   const [showDetails, setShowDetails] = useState(false);
   const supabase = createClient();
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/auth/signin');
-    }
-  }, [user, loading, router]);
-
-  useEffect(() => {
-    if (user && params.orderId) {
-      fetchOrderDetails(params.orderId);
-    }
-  }, [user, params.orderId, fetchOrderDetails]);
-
-  const fetchOrderDetails = async (orderId: string) => {
+  const fetchOrderDetails = useCallback(async (orderId: string) => {
     setIsLoading(true);
     try {
       // Fetch order
@@ -105,7 +94,19 @@ export default function OrderDetailsPage({ params }: { params: { orderId: string
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [supabase]);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/auth/signin');
+    }
+  }, [user, loading, router]);
+
+  useEffect(() => {
+    if (user && params.orderId) {
+      fetchOrderDetails(params.orderId);
+    }
+  }, [user, params.orderId, fetchOrderDetails]);
 
   const getStatusColor = (status: Order['status']) => {
     switch (status) {

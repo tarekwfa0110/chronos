@@ -16,11 +16,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { addressSchema, AddressFormData } from '@/lib/validation';
 import { toast } from 'sonner';
 
-// Define a custom error type
-type SupabaseError = {
-  message: string;
-};
-
 type Address = {
   id: string;
   user_id: string;
@@ -47,16 +42,26 @@ export default function AddressesPage() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
   const supabase = createClient();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-    setValue
-  } = useForm<AddressFormData>({
-    resolver: zodResolver(addressSchema),
-    mode: 'onChange',
-  });
+  const fetchAddresses = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('addresses')
+        .select('*')
+        .order('is_default', { ascending: false })
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setAddresses(data || []);
+    } catch (error: unknown) {
+      const message = typeof error === 'object' && error && 'message' in error
+        ? (error as { message?: string }).message
+        : String(error);
+      console.error('Error fetching addresses:', message);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [supabase]);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -69,6 +74,17 @@ export default function AddressesPage() {
       fetchAddresses();
     }
   }, [user, fetchAddresses]);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue
+  } = useForm<AddressFormData>({
+    resolver: zodResolver(addressSchema),
+    mode: 'onChange',
+  });
 
   useEffect(() => {
     if (editingAddress) {
@@ -93,28 +109,11 @@ export default function AddressesPage() {
         postalCode: '',
         country: 'Egypt',
         phone: '',
-        isDefault: false
+        isDefault: false,
+        company: '',
       });
     }
   }, [editingAddress, setValue, reset]);
-
-  const fetchAddresses = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from('addresses')
-        .select('*')
-        .order('is_default', { ascending: false })
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setAddresses(data || []);
-    } catch (error: SupabaseError) {
-      console.error('Error fetching addresses:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [supabase]);
 
   const onSubmit = async (data: AddressFormData) => {
     if (!user) return;
@@ -176,8 +175,11 @@ export default function AddressesPage() {
       fetchAddresses();
       setShowAddressModal(false);
       setEditingAddress(null);
-    } catch (error: SupabaseError) {
-      toast.error(error.message || 'Failed to save address');
+    } catch (error: unknown) {
+      const message = typeof error === 'object' && error && 'message' in error
+        ? (error as { message?: string }).message
+        : String(error);
+      toast.error(message || 'Failed to save address');
     } finally {
       setIsSubmitting(false);
     }
@@ -195,8 +197,11 @@ export default function AddressesPage() {
       setAddresses(addresses.filter(addr => addr.id !== id));
       setShowDeleteConfirm(null);
       toast.success('Address deleted successfully');
-    } catch (error: SupabaseError) {
-      toast.error(error.message || 'Failed to delete address');
+    } catch (error: unknown) {
+      const message = typeof error === 'object' && error && 'message' in error
+        ? (error as { message?: string }).message
+        : String(error);
+      toast.error(message || 'Failed to delete address');
     }
   };
 
@@ -217,8 +222,11 @@ export default function AddressesPage() {
       // Refresh addresses
       fetchAddresses();
       toast.success('Default address updated');
-    } catch (error: SupabaseError) {
-      toast.error(error.message || 'Failed to update default address');
+    } catch (error: unknown) {
+      const message = typeof error === 'object' && error && 'message' in error
+        ? (error as { message?: string }).message
+        : String(error);
+      toast.error(message || 'Failed to update default address');
     }
   };
 
@@ -508,7 +516,7 @@ export default function AddressesPage() {
               <input
                 type="checkbox"
                 id="isDefault"
-                {...register('isDefault')}
+                {...register('isDefault', { required: true })}
                 className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               <Label htmlFor="isDefault" className="text-sm font-normal">

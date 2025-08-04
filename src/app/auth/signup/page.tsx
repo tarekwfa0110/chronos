@@ -42,7 +42,7 @@ export default function SignUpPage() {
         setSuccess(true);
         toast.success('Account created successfully! Please check your email to verify your account.');
       }
-    } catch (_err) {
+    } catch {
       toast.error('An unexpected error occurred');
     } finally {
       setLoading(false);

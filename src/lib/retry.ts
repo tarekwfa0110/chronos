@@ -4,7 +4,7 @@ interface RetryConfig {
   baseDelay: number;
   maxDelay: number;
   backoffMultiplier: number;
-  retryCondition?: (error: any) => boolean;
+  retryCondition?: (error: unknown) => boolean;
 }
 
 // Default retry configuration
@@ -13,15 +13,16 @@ const defaultRetryConfig: RetryConfig = {
   baseDelay: 1000, // 1 second
   maxDelay: 10000, // 10 seconds
   backoffMultiplier: 2,
-  retryCondition: (error: any) => {
+  retryCondition: (error: unknown) => {
     // Retry on network errors, 5xx server errors, and rate limiting
-    return (
-      error.name === 'NetworkError' ||
-      error.code === 'NETWORK_ERROR' ||
-      (error.status >= 500 && error.status < 600) ||
-      error.status === 429 ||
-      error.message?.includes('network') ||
-      error.message?.includes('timeout')
+    const err = error as { name?: string; code?: string; status?: number; message?: string };
+    return !!(
+      err.name === 'NetworkError' ||
+      err.code === 'NETWORK_ERROR' ||
+      (err.status && err.status >= 500 && err.status < 600) ||
+      err.status === 429 ||
+      err.message?.includes('network') ||
+      err.message?.includes('timeout')
     );
   },
 };
@@ -38,12 +39,12 @@ export async function retry<T>(
   config: Partial<RetryConfig> = {}
 ): Promise<T> {
   const finalConfig = { ...defaultRetryConfig, ...config };
-  let lastError: any;
+  let lastError: unknown;
 
   for (let attempt = 1; attempt <= finalConfig.maxAttempts; attempt++) {
     try {
       return await fn();
-    } catch (error: any) {
+    } catch (error: unknown) {
       lastError = error;
       
       // Check if we should retry
@@ -67,16 +68,16 @@ export async function retry<T>(
 // Retry with custom error handling
 export async function retryWithHandler<T>(
   fn: () => Promise<T>,
-  onRetry?: (attempt: number, error: any, delay: number) => void,
+  onRetry?: (attempt: number, error: unknown, delay: number) => void,
   config: Partial<RetryConfig> = {}
 ): Promise<T> {
   const finalConfig = { ...defaultRetryConfig, ...config };
-  let lastError: any;
+  let lastError: unknown;
 
   for (let attempt = 1; attempt <= finalConfig.maxAttempts; attempt++) {
     try {
       return await fn();
-    } catch (error: any) {
+    } catch (error: unknown) {
       lastError = error;
       
       if (attempt === finalConfig.maxAttempts || !finalConfig.retryCondition!(error)) {
@@ -96,10 +97,10 @@ export async function retryWithHandler<T>(
 }
 
 // Retry for specific HTTP methods
-export const retryGet = <T>(url: string, options?: RequestInit, config?: Partial<RetryConfig>) =>
+export const retryGet = (url: string, options?: RequestInit, config?: Partial<RetryConfig>) =>
   retry(() => fetch(url, { ...options, method: 'GET' }), config);
 
-export const retryPost = <T>(url: string, data: any, options?: RequestInit, config?: Partial<RetryConfig>) =>
+export const retryPost = (url: string, data: Record<string, unknown>, options?: RequestInit, config?: Partial<RetryConfig>) =>
   retry(() => fetch(url, { 
     ...options, 
     method: 'POST',
@@ -107,7 +108,7 @@ export const retryPost = <T>(url: string, data: any, options?: RequestInit, conf
     body: JSON.stringify(data)
   }), config);
 
-export const retryPut = <T>(url: string, data: any, options?: RequestInit, config?: Partial<RetryConfig>) =>
+export const retryPut = (url: string, data: Record<string, unknown>, options?: RequestInit, config?: Partial<RetryConfig>) =>
   retry(() => fetch(url, { 
     ...options, 
     method: 'PUT',
@@ -115,7 +116,7 @@ export const retryPut = <T>(url: string, data: any, options?: RequestInit, confi
     body: JSON.stringify(data)
   }), config);
 
-export const retryDelete = <T>(url: string, options?: RequestInit, config?: Partial<RetryConfig>) =>
+export const retryDelete = (url: string, options?: RequestInit, config?: Partial<RetryConfig>) =>
   retry(() => fetch(url, { ...options, method: 'DELETE' }), config);
 
 // Retry configuration presets
@@ -151,16 +152,12 @@ export const retryConfigs = {
 // Retry with toast notifications
 export async function retryWithToast<T>(
   fn: () => Promise<T>,
-  toast: any, // Sonner toast instance
+  toast: { error: (message: string) => void }, // Sonner toast instance
   config: Partial<RetryConfig> = {}
 ): Promise<T> {
-  return retryWithHandler(
-    fn,
-    (attempt, error, delay) => {
-      toast.warning(`Retrying... (${attempt}/${config.maxAttempts || 3})`);
-    },
-    config
-  );
+  return retryWithHandler(fn, (attempt, _error, delay) => {
+    toast.error(`Attempt ${attempt} failed, retrying in ${delay}ms...`);
+  }, config);
 }
 
 // Retry with progress callback
@@ -170,13 +167,13 @@ export async function retryWithProgress<T>(
   config: Partial<RetryConfig> = {}
 ): Promise<T> {
   const finalConfig = { ...defaultRetryConfig, ...config };
-  let lastError: any;
+  let lastError: unknown;
 
   for (let attempt = 1; attempt <= finalConfig.maxAttempts; attempt++) {
     try {
       onProgress?.(attempt, finalConfig.maxAttempts);
       return await fn();
-    } catch (error: any) {
+    } catch (error: unknown) {
       lastError = error;
       
       if (attempt === finalConfig.maxAttempts || !finalConfig.retryCondition!(error)) {
@@ -192,16 +189,15 @@ export async function retryWithProgress<T>(
 }
 
 // Utility to check if an error is retryable
-export function isRetryableError(error: any): boolean {
-  return (
-    error.name === 'NetworkError' ||
-    error.code === 'NETWORK_ERROR' ||
-    (error.status >= 500 && error.status < 600) ||
-    error.status === 429 ||
-    error.message?.includes('network') ||
-    error.message?.includes('timeout') ||
-    error.message?.includes('ECONNRESET') ||
-    error.message?.includes('ENOTFOUND')
+export function isRetryableError(error: unknown): boolean {
+  const err = error as { name?: string; code?: string; status?: number; message?: string };
+  return !!(
+    err.name === 'NetworkError' ||
+    err.code === 'NETWORK_ERROR' ||
+    (err.status && err.status >= 500 && err.status < 600) ||
+    err.status === 429 ||
+    err.message?.includes('network') ||
+    err.message?.includes('timeout')
   );
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useFormContext, Controller } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { cn } from "@/lib/utils";
 import { getFieldError } from "@/lib/validation";
 
@@ -249,14 +249,24 @@ export function RadioGroup({ name, label, helperText, options, className }: Radi
 }
 
 // Form component wrapper
-interface FormProps extends React.FormHTMLAttributes<HTMLFormElement> {
-  onSubmit: (data: any) => void;
+interface FormProps extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> {
+  onSubmit: (data: Record<string, unknown>) => void;
   children: React.ReactNode;
 }
 
 export function Form({ onSubmit, children, className, ...props }: FormProps) {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const data: Record<string, unknown> = {};
+    formData.forEach((value, key) => {
+      data[key] = value;
+    });
+    onSubmit(data);
+  };
+
   return (
-    <form onSubmit={onSubmit} className={cn("space-y-6", className)} {...props}>
+    <form onSubmit={handleSubmit} className={cn("space-y-6", className)} {...props}>
       {children}
     </form>
   );

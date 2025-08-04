@@ -73,7 +73,7 @@ export const addressSchema = z.object({
   postalCode: z.string().min(1, 'Postal code is required').regex(/^[0-9A-Za-z\s\-]{3,10}$/, 'Please enter a valid postal code'),
   country: z.string().min(1, 'Country is required'),
   phone: phoneSchema,
-  isDefault: z.boolean().default(false),
+  isDefault: z.boolean(),
 });
 
 // Checkout schemas
@@ -163,27 +163,27 @@ export type ContactFormData = z.infer<typeof contactFormSchema>;
 export type NewsletterFormData = z.infer<typeof newsletterSchema>;
 
 // Validation error helper
-export const getFieldError = (errors: any, fieldName: string): string | undefined => {
+export const getFieldError = (errors: Record<string, unknown>, fieldName: string): string | undefined => {
   const fieldPath = fieldName.split('.');
   let current = errors;
   
   for (const path of fieldPath) {
     if (current && typeof current === 'object' && path in current) {
-      current = current[path];
+      current = current[path] as Record<string, unknown>;
     } else {
       return undefined;
     }
   }
   
-  return current?.message;
+  return (current as { message?: string })?.message;
 };
 
 // Real-time validation helper
-export const validateField = async (schema: z.ZodSchema, value: any, fieldName: string) => {
+export const validateField = async (schema: z.ZodSchema, value: unknown, fieldName: string) => {
   try {
     await schema.parseAsync({ [fieldName]: value });
     return { isValid: true, error: undefined };
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       const fieldError = error.errors.find(err => err.path.includes(fieldName));
       return { isValid: false, error: fieldError?.message };

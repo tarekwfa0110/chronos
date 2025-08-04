@@ -49,14 +49,16 @@ export default function AccountSettingsPage() {
         setIsUpdating(true);
         try {
             const { error } = await updateProfile({
-                full_name: data.fullName,
-                phone: data.phone
+                full_name: data.fullName
             });
 
             if (error) throw error;
             toast.success('Profile updated successfully');
-        } catch (error: SupabaseError) {
-            toast.error(error.message || 'Failed to update profile');
+        } catch (error: unknown) {
+            const message = typeof error === 'object' && error && 'message' in error
+                ? (error as { message?: string }).message
+                : String(error);
+            toast.error(message || 'Failed to update profile');
         } finally {
             setIsUpdating(false);
         }
@@ -69,8 +71,11 @@ export default function AccountSettingsPage() {
             const { error } = await updatePassword(''); // This will trigger a password reset email
             if (error) throw error;
             toast.success('Password reset email sent');
-        } catch (error: SupabaseError) {
-            toast.error(error.message || 'Failed to send password reset email');
+        } catch (error: unknown) {
+            const message = typeof error === 'object' && error && 'message' in error
+                ? (error as { message?: string }).message
+                : String(error);
+            toast.error(message || 'Failed to send password reset email');
         }
     };
 

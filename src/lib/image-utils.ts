@@ -1,7 +1,7 @@
 // Utility functions for image optimization
 
 // Generate a simple blur data URL for placeholders
-export function generateBlurDataURL(width: number, height: number, blur: number = 10): string {
+export function generateBlurDataURL(width: number, height: number): string {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   
@@ -50,7 +50,7 @@ export const imageSizes = {
 // Generate responsive image sizes
 export function getResponsiveSizes(breakpoints: number[] = [640, 768, 1024, 1280]): string {
   return breakpoints
-    .map((breakpoint, index) => {
+    .map((breakpoint) => {
       const size = Math.round((breakpoint / breakpoints.length) * 100);
       return `(min-width: ${breakpoint}px) ${size}vw`;
     })

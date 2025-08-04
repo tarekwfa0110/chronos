@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
 import { useAuth } from './auth-context';
 import { supabase } from '../lib/supabaseClient';
 import { Product } from '../types';
@@ -28,18 +28,6 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
-  // Fetch wishlist on mount and when user changes
-  useEffect(() => {
-    if (user) {
-      // Test database connection first
-      testDatabaseConnection();
-      fetchWishlist();
-    } else {
-      setWishlist([]);
-      setLoading(false);
-    }
-  }, [user]);
-
   const testDatabaseConnection = async () => {
     try {
       console.log('Testing database connection...');
@@ -60,12 +48,12 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
       
       console.log('Wishlist table test:', { wishlistTest, wishlistError });
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Database connection test failed:', error);
     }
   };
 
-  const fetchWishlist = async () => {
+  const fetchWishlist = useCallback(async () => {
     if (!user) return;
 
     try {
@@ -99,14 +87,24 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
       }
 
       console.log('Wishlist data:', data);
-      setWishlist(data || []);
-    } catch (error: any) {
+      setWishlist((data as unknown) as WishlistItem[] || []);
+    } catch (error: unknown) {
       console.error('Error fetching wishlist:', error);
       toast.error('Failed to fetch wishlist');
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, supabase]);
+
+  useEffect(() => {
+    if (user) {
+      testDatabaseConnection();
+      fetchWishlist();
+    } else {
+      setWishlist([]);
+      setLoading(false);
+    }
+  }, [user, fetchWishlist]);
 
   const addToWishlist = async (product: Product): Promise<{ error: string | null }> => {
     if (!user) {
@@ -149,7 +147,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
       await fetchWishlist();
       toast.success(`${product.name} added to wishlist`);
       return { error: null };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error adding to wishlist:', error);
       toast.error('Failed to add item to wishlist');
       return { error: 'Failed to add item to wishlist' };
@@ -188,7 +186,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
       }
       
       return { error: null };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error removing from wishlist:', error);
       toast.error('Failed to remove item from wishlist');
       return { error: 'Failed to remove item from wishlist' };
@@ -217,7 +215,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
 
       setWishlist([]);
       return { error: null };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error clearing wishlist:', error);
       return { error: 'Failed to clear wishlist' };
     }
