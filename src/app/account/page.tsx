@@ -2,7 +2,7 @@
 import { useAuth } from '../auth-context';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ArrowLeft, User, Mail, Settings, Heart, Package } from 'lucide-react';
+import { ArrowLeft, User, Mail, Settings, Heart, Package, MapPin } from 'lucide-react';
 import { AccountSkeleton } from '@/components/ui/skeleton';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -70,9 +70,11 @@ export default function AccountPage() {
           </div>
 
           <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all duration-200">
-              Edit Profile
-            </Button>
+            <Link href="/account/settings">
+              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all duration-200">
+                Edit Profile
+              </Button>
+            </Link>
           </div>
         </div>
 
@@ -102,6 +104,16 @@ export default function AccountPage() {
                 <div>
                   <p className="font-medium text-gray-900 dark:text-white">Order History</p>
                   <p className="text-sm text-gray-500 dark:text-gray-400">View past orders</p>
+                </div>
+              </div>
+            </Link>
+            
+            <Link href="/account/addresses">
+              <div className="flex items-center gap-3 p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer">
+                <MapPin className="w-5 h-5 text-purple-500" />
+                <div>
+                  <p className="font-medium text-gray-900 dark:text-white">My Addresses</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Manage shipping addresses</p>
                 </div>
               </div>
             </Link>
@@ -143,4 +155,4 @@ export default function AccountPage() {
       </div>
     </main>
   );
-} 
+}
