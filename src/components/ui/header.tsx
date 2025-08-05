@@ -34,9 +34,12 @@ export function Header() {
     const cartItemCount = Array.isArray(cart) ? cart.reduce((total, item) => total + item.quantity, 0) : 0;
 
     return (
-        <header className="fixed top-0 left-0 w-full z-50 bg-background/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 h-14 sm:h-16 md:h-18 flex items-center justify-between px-3 sm:px-4 md:px-6 lg:px-8">
-            {/* Logo: left on mobile, centered on sm+ */}
-            <div className="flex-1 flex justify-start sm:justify-center min-w-0">
+        <header className="fixed top-0 left-0 w-full z-50 bg-background/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 h-14 sm:h-16 md:h-18 flex items-center justify-around px-3 sm:px-4 md:px-6 lg:px-8">
+            {/* Left empty div: only visible on sm+ */}
+            <div className="hidden sm:block flex-1" />
+            
+            {/* Centered Logo */}
+            <div className="flex-1 flex justify-center min-w-0">
                 <Link 
                     href="/" 
                     className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-extrabold tracking-widest select-none truncate hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
@@ -46,7 +49,7 @@ export function Header() {
             </div>
 
             {/* Right Actions */}
-            <div className="flex justify-end items-center gap-1 sm:gap-2 md:gap-3 lg:gap-4 min-w-0">
+            <div className="flex flex-1 justify-end items-center gap-1 sm:gap-2 md:gap-3 lg:gap-4 min-w-0">
                 <ThemeToggle />
                 <button 
                     onClick={openCart} 
@@ -122,5 +125,6 @@ export function Header() {
                 )}
             </div>
         </header>
+        
     );
 }
