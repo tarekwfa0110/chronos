@@ -1,11 +1,8 @@
 "use client";
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '../lib/supabaseClient';
 import { useState } from 'react';
-import { Search } from 'lucide-react';
 import ProductCard from '../components/ui/ProductCard';
 import type { Product } from '../types';
-import { CATEGORIES } from '../constants';
 import { useCart } from './cart-context';
 import { Typography } from '@/components/ui/font-utils';
 import { ProductGridSkeleton } from '@/components/ui/skeleton';
@@ -23,11 +20,10 @@ export default function HomePage() {
   });
   const { addToCart } = useCart();
   const [category, setCategory] = useState('');
-  const [brand, setBrand] = useState('');
   const [minPrice, setMinPrice] = useState<number | undefined>(undefined);
   const [maxPrice, setMaxPrice] = useState<number | undefined>(undefined);
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   const filteredProducts = (products as Product[] | undefined)?.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = !category || product.category === category;

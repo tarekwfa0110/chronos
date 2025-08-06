@@ -1,6 +1,5 @@
 "use client";
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '../../../lib/supabaseClient';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useParams, notFound } from 'next/navigation';
@@ -104,7 +103,7 @@ export default function ProductPage() {
     "sku": product.id,
     "brand": {
       "@type": "Brand",
-      "name": product.brand || 'Chronos'
+      "name": "Chronos"
     },
     "offers": {
       "@type": "Offer",

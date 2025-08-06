@@ -68,7 +68,7 @@ export class CachedProductAPI {
 // User API functions (no Redis)
 export class CachedUserAPI {
   // Get user session
-  static async getUserSession(userId: string): Promise<any> {
+  static async getUserSession(userId: string): Promise<unknown> {
     try {
       const { data, error } = await supabase
         .from('user_sessions')
@@ -85,7 +85,7 @@ export class CachedUserAPI {
   }
 
   // Get user wishlist
-  static async getUserWishlist(userId: string): Promise<any[]> {
+  static async getUserWishlist(userId: string): Promise<unknown[]> {
     try {
       const { data, error } = await supabase
         .from('wishlist')
@@ -106,12 +106,12 @@ export class CachedUserAPI {
   }
 
   // Get search history (local only)
-  static async getSearchHistory(userId: string): Promise<string[]> {
+  static async getSearchHistory(): Promise<string[]> {
     return [];
   }
 
   // Save search history (local only)
-  static async saveSearchHistory(userId: string, query: string): Promise<void> {
+  static async saveSearchHistory(): Promise<void> {
     return;
   }
 } 

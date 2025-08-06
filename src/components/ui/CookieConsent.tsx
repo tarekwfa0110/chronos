@@ -89,7 +89,7 @@ export function CookieConsent({ onAccept, onDecline }: CookieConsentProps) {
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 We use cookies and similar technologies to help personalize content, 
                 provide and improve our services, and analyze our traffic. 
-                By clicking "Accept All", you consent to our use of cookies.
+                By clicking &quot;Accept All&quot;, you consent to our use of cookies.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
