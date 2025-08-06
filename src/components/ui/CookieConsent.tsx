@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { Button } from './button';
-import { X, Settings, Shield, Analytics, Marketing } from 'lucide-react';
+import { X, Settings, Shield, BarChart2, Megaphone } from 'lucide-react';
 
 interface CookiePreferences {
   necessary: boolean;
@@ -161,7 +161,7 @@ export function CookieConsent({ onAccept, onDecline }: CookieConsentProps) {
                 <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <Analytics className="w-5 h-5 text-blue-600" />
+                      <BarChart2 className="w-5 h-5 text-blue-600" />
                       <span className="font-semibold text-gray-900 dark:text-white">
                         Analytics Cookies
                       </span>
@@ -186,7 +186,7 @@ export function CookieConsent({ onAccept, onDecline }: CookieConsentProps) {
                 <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <Marketing className="w-5 h-5 text-purple-600" />
+                      <Megaphone className="w-5 h-5 text-purple-600" />
                       <span className="font-semibold text-gray-900 dark:text-white">
                         Marketing Cookies
                       </span>

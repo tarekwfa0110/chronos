@@ -31,10 +31,9 @@ export default function HomePage() {
   const filteredProducts = (products as Product[] | undefined)?.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = !category || product.category === category;
-    const matchesBrand = !brand || (product.brand && product.brand === brand);
     const matchesMinPrice = minPrice === undefined || product.price >= minPrice;
     const matchesMaxPrice = maxPrice === undefined || product.price <= maxPrice;
-    return matchesSearch && matchesCategory && matchesBrand && matchesMinPrice && matchesMaxPrice;
+    return matchesSearch && matchesCategory && matchesMinPrice && matchesMaxPrice;
   }) || [];
 
   return (
@@ -49,13 +48,11 @@ export default function HomePage() {
           value={searchTerm}
           onChange={setSearchTerm}
           onCategoryChange={setCategory}
-          onBrandChange={setBrand}
           onPriceChange={(min, max) => {
             setMinPrice(isNaN(min) ? undefined : min);
             setMaxPrice(isNaN(max) ? undefined : max);
           }}
           category={category}
-          brand={brand}
           minPrice={minPrice}
           maxPrice={maxPrice}
         />
