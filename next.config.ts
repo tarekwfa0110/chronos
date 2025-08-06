@@ -91,9 +91,9 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      // Images with specific cache headers
+      // Images with specific cache headers - fixed pattern
       {
-        source: '/(.*\\.(jpg|jpeg|png|gif|svg|ico|webp|avif))',
+        source: '/:path*.(jpg|jpeg|png|gif|svg|ico|webp|avif)',
         headers: [
           {
             key: 'Cache-Control',
