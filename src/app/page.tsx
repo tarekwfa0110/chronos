@@ -10,10 +10,10 @@ import { useCart } from './cart-context';
 import { Typography } from '@/components/ui/font-utils';
 import { ProductGridSkeleton } from '@/components/ui/skeleton';
 import { AdvancedSearchBar } from '../components/ui/AdvancedSearchBar';
+import { CachedProductAPI } from '../lib/cached-api';
 
 async function fetchProducts() {
-  const { data } = await supabase.from('products').select('*');
-  return data || [];
+  return await CachedProductAPI.getAllProducts();
 }
 
 export default function HomePage() {

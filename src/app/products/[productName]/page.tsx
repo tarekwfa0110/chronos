@@ -21,15 +21,10 @@ import {
   Clock
 } from 'lucide-react';
 import { ProductDetailSkeleton } from '@/components/ui/skeleton';
+import { CachedProductAPI } from '../../../lib/cached-api';
 
 async function fetchProductByName(productName: string) {
-  const { data, error } = await supabase
-        .from('products')
-        .select('*')
-    .ilike('name', productName.replace(/-/g, ' '))
-        .single();
-  if (error || !data) return null;
-  return data;
+  return await CachedProductAPI.getProductByName(productName);
 }
 
 export default function ProductPage() {

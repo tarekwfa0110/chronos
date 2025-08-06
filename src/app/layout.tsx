@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "./providers";
 import { Header } from "@/components/ui/header";
 import CartModal from "./cart-modal";
+import { CookieConsent } from "@/components/ui/CookieConsent";
 
 // Primary font: Geist (modern, clean)
 const geistSans = Geist({
@@ -126,6 +127,7 @@ export default function RootLayout({
           <main id="main-content">
             {children}
           </main>
+          <CookieConsent />
         </Providers>
       </body>
     </html>
