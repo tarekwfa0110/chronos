@@ -104,11 +104,28 @@ export default function RootLayout({
         <meta name="twitter:title" content="Chronos - Modern Watch Store" />
         <meta name="twitter:description" content="Chronos is a minimal, modern e-commerce storefront for watches. Shop the latest styles with a clean, dark-mode-first design and a smooth shopping experience." />
         <meta name="twitter:image" content="/public/globe.svg" />
+        <link rel="canonical" href="https://chronos.example.com/" />
+        {/* Organization Structured Data */}
+        <script type="application/ld+json" suppressHydrationWarning>{`
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Chronos",
+            "url": "https://chronos.example.com",
+            "logo": "https://chronos.example.com/public/globe.svg",
+            "sameAs": []
+          }
+        `}</script>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased pt-16 dark:bg-[#0C0A09]`}>
         <Providers>
+          <a href="#main-content" className="skip-link">
+            Skip to main content
+          </a>
           <ClientOnlyHeaderAndCartModal />
-          {children}
+          <main id="main-content">
+            {children}
+          </main>
         </Providers>
       </body>
     </html>

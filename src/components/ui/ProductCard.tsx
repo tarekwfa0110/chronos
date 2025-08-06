@@ -76,36 +76,38 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, showAction
                 : 'bg-white/90 dark:bg-gray-800/90 text-gray-600 dark:text-gray-400 hover:bg-red-500 hover:text-white'
             }`}
             aria-label={isInWishlist(product.id) ? 'Remove from wishlist' : 'Add to wishlist'}
+            aria-pressed={isInWishlist(product.id)}
           >
             <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
           </button>
         </div>
       </Link>
-      <div className="flex flex-col flex-1 p-6 items-center justify-between">
-        <span className="text-xl font-extrabold text-center mb-2 uppercase tracking-wide text-black dark:text-white group-hover:text-red-500 dark:group-hover:text-red-400 transition-colors duration-300">
-          {product.name}
-        </span>
-        <span className="text-lg font-bold text-center text-black dark:text-white mb-6">
-          EGP {product.price}
-        </span>
+      <div className="p-6 space-y-4">
+        <div>
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+            {product.name}
+          </h3>
+          <p className="text-2xl font-bold text-red-500">
+            ${product.price.toFixed(2)}
+          </p>
+        </div>
+        
         {showActions && (
-          <div className="flex gap-3 w-full">
+          <div className="flex gap-3">
             <button
-              className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer"
               onClick={onAddToCart}
+              className="flex-1 bg-red-500 text-white py-3 px-4 rounded-xl font-semibold hover:bg-red-600 transition-colors flex items-center justify-center gap-2"
               aria-label="Add to Cart"
-              type="button"
             >
-              <ShoppingCart className="w-4 h-4" />
+              <ShoppingCart className="w-5 h-5" />
               Add to Cart
             </button>
             <button
-              className="w-full py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-semibold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer"
               onClick={onBuyNow}
+              className="flex-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-3 px-4 rounded-xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
               aria-label="Buy Now"
-              type="button"
             >
-              <Zap className="w-4 h-4" />
+              <Zap className="w-5 h-5" />
               Buy Now
             </button>
           </div>

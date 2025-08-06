@@ -1,11 +1,11 @@
 "use client";
-import { Drawer, DrawerContent, DrawerHeader, DrawerClose, DrawerTitle } from '@/components/ui/drawer';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { useCart } from './cart-context';
 import { ThumbnailImage } from '@/components/ui/optimized-image';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../lib/supabaseClient';
-import { X, Check } from 'lucide-react';
+import { X, ShoppingCart, Minus, Plus } from 'lucide-react';
 import Link from 'next/link';
 import ProductCard from '../components/ui/ProductCard';
 import type { Product } from '../types';
@@ -13,7 +13,7 @@ import type { Product } from '../types';
 import { ProductCardSkeleton } from '@/components/ui/skeleton';
 
 export default function CartModal() {
-  const { cart, isCartOpen, closeCart } = useCart();
+  const { cart, isCartOpen, closeCart, updateQuantity, removeFromCart } = useCart();
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -32,22 +32,78 @@ export default function CartModal() {
 
   return (
     <Drawer open={isCartOpen} onOpenChange={closeCart} direction="right">
-      <DrawerContent className="fixed top-0 right-0 h-full max-w-md w-full rounded-none p-0 flex flex-col shadow-2xl border-l bg-white dark:bg-black z-50 animate-in slide-in-from-right-32" style={{ maxWidth: 400 }}>
-        <DrawerTitle className="sr-only">Shopping Cart</DrawerTitle>
-        {/* Header */}
-        <DrawerHeader className="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-2 text-lg font-bold text-black dark:text-white">
-              <Check className="text-green-600 w-6 h-6" />
-              ADDED TO CART
-            </div>
-            <DrawerClose asChild>
-              <button onClick={closeCart} aria-label="Close" className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
-                <X className="w-8 h-8 text-gray-700 dark:text-white font-bold" />
-              </button>
-            </DrawerClose>
+      <DrawerContent className="h-[85vh] sm:h-[80vh]">
+        <DrawerHeader className="border-b border-gray-200 dark:border-gray-800">
+          <div className="flex items-center justify-between">
+            <DrawerTitle className="text-xl font-bold">Shopping Cart</DrawerTitle>
+            <button 
+              onClick={closeCart} 
+              aria-label="Close cart" 
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
         </DrawerHeader>
+        
+        <div className="flex-1 overflow-y-auto p-6">
+          {cart.length === 0 ? (
+            <div className="text-center py-12">
+              <ShoppingCart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Your cart is empty</h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">Add some products to get started!</p>
+              <Button onClick={closeCart} className="bg-red-500 hover:bg-red-600">
+                Continue Shopping
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {cart.map((item) => (
+                <div key={item.id} className="flex gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                  <div className="w-16 h-16 relative flex-shrink-0">
+                    <ThumbnailImage 
+                      src={item.image_url || '/placeholder.png'} 
+                      alt={item.name} 
+                      fill 
+                      style={{ objectFit: 'contain' }} 
+                      className="rounded" 
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-gray-900 dark:text-white truncate">{item.name}</h3>
+                    <p className="text-red-500 font-bold">${item.price.toFixed(2)}</p>
+                    <div className="flex items-center justify-between mt-2">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                          className="p-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                          aria-label="Decrease quantity"
+                        >
+                          <Minus className="w-3 h-3" />
+                        </button>
+                        <span className="text-sm font-medium min-w-[2rem] text-center">{item.quantity}</span>
+                        <button
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          className="p-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                          aria-label="Increase quantity"
+                        >
+                          <Plus className="w-3 h-3" />
+                        </button>
+                      </div>
+                      <button
+                        onClick={() => removeFromCart(item.id)}
+                        className="p-1 text-gray-400 hover:text-red-500 transition-colors"
+                        aria-label="Remove item"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         {/* Cart Summary */}
         <div className="flex-1 overflow-y-auto px-6 py-4">
           {cart.length === 0 ? (

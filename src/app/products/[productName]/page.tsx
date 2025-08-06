@@ -99,8 +99,29 @@ export default function ProductPage() {
         notFound();
     }
 
-    return (
+  // Product structured data for SEO
+  const productJsonLd = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": product.name,
+    "image": product.image_url ? [product.image_url] : [],
+    "description": product.description || '',
+    "sku": product.id,
+    "brand": {
+      "@type": "Brand",
+      "name": product.brand || 'Chronos'
+    },
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "USD",
+      "price": product.price,
+      "availability": "https://schema.org/InStock"
+    }
+  };
+
+  return (
     <main className="max-w-7xl mx-auto py-8 px-4 dark:bg-[#0C0A09] min-h-screen">
+      <script type="application/ld+json" suppressHydrationWarning>{JSON.stringify(productJsonLd)}</script>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
         {/* Left: Image Gallery */}
         <div className="space-y-6">
@@ -125,10 +146,14 @@ export default function ProductPage() {
                     : 'bg-white/80 dark:bg-gray-700 text-gray-700 dark:text-white hover:bg-white dark:hover:bg-gray-600 shadow-md'
                     }`}
                   aria-label={isInWishlist(product.id) ? 'Remove from wishlist' : 'Add to wishlist'}
+                  aria-pressed={isInWishlist(product.id)}
                 >
                   <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
                 </button>
-                <button className="p-3 rounded-full bg-white/80 dark:bg-gray-700 text-gray-700 dark:text-white hover:bg-white dark:hover:bg-gray-600 backdrop-blur-sm shadow-md transition-all duration-200" aria-label="Share product">
+                <button 
+                  className="p-3 rounded-full bg-white/80 dark:bg-gray-700 text-gray-700 dark:text-white hover:bg-white dark:hover:bg-gray-600 backdrop-blur-sm shadow-md transition-all duration-200" 
+                  aria-label="Share product"
+                >
                   <Share2 className="w-5 h-5" />
                 </button>
               </div>
@@ -167,26 +192,23 @@ export default function ProductPage() {
 
           {/* Quantity and Add to Cart */}
           <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Quantity:</span>
-              <div className="flex items-center border-2 border-gray-200 dark:border-gray-700 rounded-lg">
-                <button
-                  onClick={() => handleQuantityChange(-1)}
-                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  disabled={quantity <= 1}
-                  aria-label="Decrease quantity"
-                >
-                  <Minus className="w-4 h-4" />
-                </button>
-                <span className="px-4 py-2 font-medium min-w-[3rem] text-center text-black dark:text-white">{quantity}</span>
-                <button
-                  onClick={() => handleQuantityChange(1)}
-                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  aria-label="Increase quantity"
-                >
-                  <Plus className="w-4 h-4" />
-                </button>
-              </div>
+            <div className="flex items-center gap-4 mb-6">
+              <button
+                onClick={() => handleQuantityChange(-1)}
+                disabled={quantity <= 1}
+                className="p-2 rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label="Decrease quantity"
+              >
+                <Minus className="w-4 h-4" />
+              </button>
+              <span className="text-xl font-semibold min-w-[3rem] text-center">{quantity}</span>
+              <button
+                onClick={() => handleQuantityChange(1)}
+                className="p-2 rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                aria-label="Increase quantity"
+              >
+                <Plus className="w-4 h-4" />
+              </button>
             </div>
 
             {/* Action Buttons */}

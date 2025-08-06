@@ -76,7 +76,11 @@ export function Header() {
                                     <User className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" />
                                 </button>
                                 {showUserMenu && (
-                                    <div className="absolute right-0 top-full mt-2 w-44 sm:w-48 md:w-52 lg:w-56 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-200 dark:border-gray-800 py-2 text-sm animate-in slide-in-from-top-2 duration-200">
+                                    <div 
+                                        className="absolute right-0 top-full mt-2 w-44 sm:w-48 md:w-52 lg:w-56 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-200 dark:border-gray-800 py-2 text-sm animate-in slide-in-from-top-2 duration-200"
+                                        role="menu"
+                                        aria-label="User menu"
+                                    >
                                         <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                                             <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                                                 {user.email}
@@ -86,6 +90,7 @@ export function Header() {
                                             href="/account"
                                             className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                                             onClick={() => setShowUserMenu(false)}
+                                            role="menuitem"
                                         >
                                             <Settings className="w-4 h-4" />
                                             Account Settings
@@ -94,6 +99,7 @@ export function Header() {
                                             href="/wishlist"
                                             className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                                             onClick={() => setShowUserMenu(false)}
+                                            role="menuitem"
                                         >
                                             <Heart className="w-4 h-4" />
                                             Wishlist
@@ -106,6 +112,7 @@ export function Header() {
                                         <button
                                             onClick={handleSignOut}
                                             className="flex items-center gap-3 px-4 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors w-full text-left"
+                                            role="menuitem"
                                         >
                                             <LogOut className="w-4 h-4" />
                                             Sign Out

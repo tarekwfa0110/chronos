@@ -94,34 +94,31 @@ export default function CartPage() {
                                     </div>
                                     <button
                                         onClick={() => removeFromCart(item.id)}
-                                        className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors flex-shrink-0"
+                                        className="p-2 text-gray-400 hover:text-red-500 transition-colors"
                                         aria-label="Remove item"
                                     >
-                                        <X className="w-5 h-5" />
+                                        <X className="w-4 h-4" />
                                     </button>
                                 </div>
 
                                 {/* Bottom Part: Quantity and Price */}
                                 <div className="flex justify-between items-end mt-auto">
                                     {/* Quantity Controls */}
-                                    <div className="flex flex-row items-center gap-1 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-1">
+                                    <div className="flex items-center gap-2">
                                         <button
                                             onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                                            className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 rounded transition-colors"
-                                            disabled={item.quantity <= 1}
+                                            className="p-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                                             aria-label="Decrease quantity"
                                         >
-                                            <Minus className="w-4 h-4" />
+                                            <Minus className="w-3 h-3" />
                                         </button>
-                                        <span className="px-2 font-semibold min-w-[2.25rem] text-center text-gray-900 dark:text-white text-base">
-                                            {item.quantity}
-                                        </span>
+                                        <span className="text-sm font-medium min-w-[2rem] text-center">{item.quantity}</span>
                                         <button
                                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                            className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                                            className="p-1 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                                             aria-label="Increase quantity"
                                         >
-                                            <Plus className="w-4 h-4" />
+                                            <Plus className="w-3 h-3" />
                                         </button>
                                     </div>
 
