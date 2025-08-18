@@ -153,7 +153,7 @@ export default function HomePage() {
         {isLoading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="animate-pulse">
+              <div key={i}>
                 <div className="bg-card rounded-2xl p-4 border border-border">
                   <div className="aspect-square bg-muted rounded-xl mb-4"></div>
                   <div className="space-y-2">
