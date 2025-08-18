@@ -37,7 +37,8 @@ export default function AccountSettingsPage() {
 
         // Pre-fill form with user data when available
         if (user) {
-            setValue('fullName', user.user_metadata?.full_name || '');
+            setValue('firstName', user.user_metadata?.first_name || '');
+            setValue('lastName', user.user_metadata?.last_name || '');
             setValue('email', user.email || '');
             setValue('phone', user.user_metadata?.phone || '');
         }
@@ -49,7 +50,8 @@ export default function AccountSettingsPage() {
         setIsUpdating(true);
         try {
             const { error } = await updateProfile({
-                full_name: data.fullName
+                first_name: data.firstName,
+                last_name: data.lastName
             });
 
             if (error) throw error;
@@ -121,23 +123,44 @@ export default function AccountSettingsPage() {
 
                     <div className="space-y-6">
                         <div>
-                            <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Full Name
+                            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                First Name
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <User className="h-5 w-5 text-gray-400" />
                                 </div>
                                 <Input
-                                    id="fullName"
+                                    id="firstName"
                                     type="text"
                                     className="pl-10 w-full"
-                                    placeholder="Your full name"
-                                    {...register('fullName')}
+                                    placeholder="Your first name"
+                                    {...register('firstName')}
                                 />
                             </div>
-                            {errors.fullName && (
-                                <p className="mt-1 text-sm text-red-600">{errors.fullName.message}</p>
+                            {errors.firstName && (
+                                <p className="mt-1 text-sm text-red-600">{errors.firstName.message}</p>
+                            )}
+                        </div>
+
+                        <div>
+                            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Last Name
+                            </label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <User className="h-5 w-5 text-gray-400" />
+                                </div>
+                                <Input
+                                    id="lastName"
+                                    type="text"
+                                    className="pl-10 w-full"
+                                    placeholder="Your last name"
+                                    {...register('lastName')}
+                                />
+                            </div>
+                            {errors.lastName && (
+                                <p className="mt-1 text-sm text-red-600">{errors.lastName.message}</p>
                             )}
                         </div>
 

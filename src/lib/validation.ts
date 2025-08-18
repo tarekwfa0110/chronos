@@ -91,6 +91,16 @@ export type SignUpFormData = z.infer<typeof signUpSchema>;
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 export type NewPasswordFormData = z.infer<typeof newPasswordSchema>;
 
+// Update Profile Schema
+export const updateProfileSchema = z.object({
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
+  email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
+  phone: z.string().optional(),
+});
+
+export type UpdateProfileFormData = z.infer<typeof updateProfileSchema>;
+
 // Utility function to extract field errors from React Hook Form
 import { FieldErrors } from 'react-hook-form';
 
