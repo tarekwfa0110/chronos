@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS user_profiles (
   full_name TEXT,
   avatar_url TEXT,
   phone TEXT,
+  role TEXT CHECK (role IN ('user', 'admin', 'super_admin')) DEFAULT 'user',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -133,8 +134,8 @@ CREATE POLICY "Users can insert own order items" ON order_items FOR INSERT WITH 
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO user_profiles (id, full_name)
-  VALUES (NEW.id, NEW.raw_user_meta_data->>'full_name');
+  INSERT INTO user_profiles (id, full_name, role)
+  VALUES (NEW.id, NEW.raw_user_meta_data->>'full_name', 'user');
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
