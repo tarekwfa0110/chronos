@@ -1,6 +1,7 @@
 "use client";
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import type { Product } from '../types';
 import { useCart } from './cart-context';
 import { AdvancedSearchBar } from '../components/ui/AdvancedSearchBar';
@@ -18,6 +19,7 @@ export default function HomePage() {
     queryFn: fetchProducts,
   });
   const { addToCart } = useCart();
+  const router = useRouter();
   const [category, setCategory] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -270,7 +272,13 @@ export default function HomePage() {
                     animation: `fadeInUp 0.4s ease-out ${index * 0.05}s both`
                   }}
                 >
-                  <div className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-lg dark:hover:shadow-2xl hover:shadow-gray-200/50 dark:hover:shadow-black/25 transition-all duration-300 hover:-translate-y-1">
+                  <div 
+                    className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-lg dark:hover:shadow-2xl hover:shadow-gray-200/50 dark:hover:shadow-black/25 transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+                    onClick={() => {
+                      const productNameSlug = product.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                      router.push(`/products/${productNameSlug}`);
+                    }}
+                  >
                     {/* Product Image */}
                     <div className="aspect-square p-4 bg-muted/50">
                       <img
@@ -295,7 +303,8 @@ export default function HomePage() {
                       {/* Action Buttons */}
                       <div className="flex gap-2">
                         <Button
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             addToCart({
                               id: product.id,
                               name: product.name,
@@ -310,7 +319,8 @@ export default function HomePage() {
                           Add to Cart
                         </Button>
                         <Button
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             window.location.href = `/checkout?productId=${product.id}&quantity=1`;
                           }}
                           size="sm"
